@@ -106,10 +106,6 @@ function setupBalanceSubscription() {
                 const newBalance = parseFloat(payload.new.balance) || 0.00;
                 currentBalance = newBalance;
                 updateBalance();
-                // Reload portfolio when balance changes
-                loadUserPortfolio().then(() => {
-                    updatePortfolio();
-                });
             })
             .subscribe((status) => {
                 console.log('Subscription status:', status);
@@ -259,7 +255,6 @@ refreshBtn.addEventListener('click', async () => {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
     currentBalance = await fetchUserBalance();
-    await loadUserPortfolio(); // Load portfolio from database
     updateBalance();
     setupBalanceSubscription();
     updatePortfolio();
@@ -526,7 +521,7 @@ sendBtn.addEventListener('click', () => {
     actionModalTitle.textContent = 'Send Crypto';
     sendForm.style.display = 'block';
     receiveForm.style.display = 'none';
-    actionModal.classList.add('show');
+    actionModal.style.display = 'flex';
 });
 
 // Receive button
@@ -534,7 +529,7 @@ receiveBtn.addEventListener('click', () => {
     actionModalTitle.textContent = 'Receive Crypto';
     sendForm.style.display = 'none';
     receiveForm.style.display = 'block';
-    actionModal.classList.add('show');
+    actionModal.style.display = 'flex';
 });
 
 // Buy button (placeholder)
@@ -549,7 +544,7 @@ swapBtn.addEventListener('click', () => {
 
 // Close modal
 actionModalClose.addEventListener('click', () => {
-    actionModal.classList.remove('show');
+    actionModal.style.display = 'none';
 });
 
 // Send form submission
@@ -575,33 +570,16 @@ sendSubmitBtn.addEventListener('click', () => {
     }
 
     alert(`Sending ${amount} ${currency} to ${address}...\n\nTransaction submitted!`);
-    actionModal.classList.remove('show');
+    actionModal.style.display = 'none';
 
     // Clear form
     document.getElementById('send-address').value = '';
     document.getElementById('send-amount').value = '';
 });
 
-// Wallet addresses for different coins
-const walletAddresses = {
-    'BTC': 'bc1qv862cqqesd24mknyjlf22nrg4hl8deqcrax8nj',
-    'ETH': '0x695ef4038416D42cC267Fe767816963f7A528379',
-    'USDT': '0x695ef4038416D42cC267Fe767816963f7A528379'
-};
-
-// Update address display when coin is selected
-const receiveCurrencySelect = document.getElementById('receive-currency');
-const walletAddressDisplay = document.getElementById('wallet-address');
-
-receiveCurrencySelect.addEventListener('change', () => {
-    const selectedCoin = receiveCurrencySelect.value;
-    walletAddressDisplay.textContent = walletAddresses[selectedCoin];
-});
-
 // Copy address
 copyAddressBtn.addEventListener('click', () => {
-    const selectedCoin = receiveCurrencySelect.value;
-    const address = walletAddresses[selectedCoin];
+    const address = '0x1234567890abcdef1234567890abcdef12345678'; // Demo address
     navigator.clipboard.writeText(address).then(() => {
         alert('Address copied to clipboard!');
     }).catch(() => {

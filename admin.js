@@ -8,6 +8,14 @@ const ADMIN_PASSWORD = 'admin123';
 let allUsers = [];
 let currentEditingUser = null;
 
+// Coin prices for portfolio calculations
+const coinPrices = {
+    'BTC': 53450.00,
+    'BNB': 245.67,
+    'ETH': 2345.89,
+    'USDT': 1.00
+};
+
 // ===== NAVIGATION FUNCTIONALITY =====
 
 const navItems = document.querySelectorAll('.nav-item');
@@ -59,34 +67,77 @@ document.addEventListener('click', (e) => {
 // Fetch all users from Supabase
 async function fetchUsers() {
     try {
-        if (!window.supabaseClient) {
-            throw new Error('Supabase client not available');
-        }
+        // Fetch users from Supabase
+        if (window.supabaseClient) {
+            console.log('Supabase client found, attempting to fetch users...');
+            const { data: users, error } = await window.supabaseClient
+                .from('users')
+                .select('id, email, balance, status, createdat')
+                .order('createdat', { ascending: false });
 
-        // Fetch users from auth.users (this might require RLS policies)
-        // For demo purposes, we'll simulate user data
-        // In production, you'd fetch from a custom users table
-        const { data: authUsers, error: authError } = await window.supabaseClient.auth.admin.listUsers();
+            console.log('Supabase response:', { data: users, error });
 
-        if (authError) {
-            console.warn('Auth users fetch failed, using simulated data:', authError);
-            // Simulate user data for demo
-            allUsers = [
-                { id: 1, email: 'user1@example.com', balance: 1250.75, status: 'active', created_at: '2024-01-15' },
-                { id: 2, email: 'user2@example.com', balance: 500.00, status: 'active', created_at: '2024-01-20' },
-                { id: 3, email: 'user3@example.com', balance: 0.00, status: 'inactive', created_at: '2024-01-25' },
-                { id: 4, email: 'user4@example.com', balance: 2500.50, status: 'active', created_at: '2024-02-01' },
-                { id: 5, email: 'user5@example.com', balance: 750.25, status: 'active', created_at: '2024-02-05' }
-            ];
+            if (error) {
+                console.error('Error fetching users from Supabase:', error);
+                console.error('Error details:', error.message, error.details, error.hint);
+                showMessage(`Error loading users: ${error.message}`, 'error');
+
+                // Fallback to backup data if available
+                try {
+                    const response = await fetch('./users-backup.json');
+                    if (response.ok) {
+                        const backupData = await response.json();
+                        allUsers = backupData.map(user => ({
+                            id: user.id,
+                            email: user.email,
+                            balance: parseFloat(user.balance) || 0.00,
+                            status: user.status || 'active',
+                            created_at: user.created_at
+                        }));
+                        console.log('Using backup data as fallback');
+                        showMessage('Using backup data - database connection failed', 'info');
+                    } else {
+                        allUsers = [];
+                    }
+                } catch (backupError) {
+                    console.error('Backup data load failed:', backupError);
+                    allUsers = [];
+                }
+            } else {
+                // Use data from Supabase
+                allUsers = users.map(user => ({
+                    id: user.id,
+                    email: user.email,
+                    balance: parseFloat(user.balance) || 0.00,
+                    status: user.status || 'active',
+                    created_at: user.created_at
+                }));
+            }
         } else {
-            // Convert auth users to our format
-            allUsers = authUsers.users.map(user => ({
-                id: user.id,
-                email: user.email,
-                balance: 0.00, // Default balance, would be fetched from separate table
-                status: user.email_confirmed_at ? 'active' : 'pending',
-                created_at: user.created_at
-            }));
+            console.error('Supabase client not available');
+            showMessage('Database connection not available. Using backup data.', 'info');
+            // Try backup
+            try {
+                const response = await fetch('../../Users/PC/Downloads/users-backup-2026-02-05.json');
+                if (response.ok) {
+                    const backupData = await response.json();
+                    allUsers = backupData.map(user => ({
+                        id: user.id,
+                        email: user.email,
+                        balance: parseFloat(user.balance) || 0.00,
+                        status: user.status || 'active',
+                        created_at: user.created_at
+                    }));
+                    console.log('Using backup data as fallback');
+                } else {
+                    allUsers = [];
+                    showMessage('Backup data not available.', 'error');
+                }
+            } catch (backupError) {
+                console.error('Backup data load failed:', backupError);
+                allUsers = [];
+                showMessage('Backup data load failed.', 'error');
+            }
         }
 
         displayUsers(allUsers);
@@ -95,6 +146,9 @@ async function fetchUsers() {
     } catch (error) {
         console.error('Error fetching users:', error);
         showMessage('Error loading users. Please try again.', 'error');
+        allUsers = [];
+        displayUsers(allUsers);
+        updateOverviewStats();
     }
 }
 
@@ -112,7 +166,7 @@ function displayUsers(users) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class="user-email">${user.email}</td>
-            <td class="user-balance">$${user.balance.toFixed(2)}</td>
+            <td class="user-balance">$${formatNumberWithCommas(user.balance.toFixed(2))}</td>
             <td class="user-status">
                 <span class="status-badge ${user.status}">${user.status}</span>
             </td>
@@ -165,18 +219,30 @@ function openEditBalanceModal(user) {
     currentEditingUser = user;
 
     document.getElementById('edit-user-email').textContent = user.email;
-    document.getElementById('edit-current-balance').textContent = user.balance.toFixed(2);
-    document.getElementById('new-balance').value = user.balance;
+    document.getElementById('edit-current-balance').textContent = formatNumberWithCommas(user.balance.toFixed(2));
+    document.getElementById('new-balance').value = formatNumberWithCommas(user.balance.toFixed(2));
+    document.getElementById('balance-coin').value = 'BTC'; // Default to BTC
     document.getElementById('edit-reason').value = '';
 
     editBalanceModal.style.display = 'flex';
     setTimeout(() => editBalanceModal.classList.add('show'), 10);
+
+    // Add input formatting for balance field
+    const balanceInput = document.getElementById('new-balance');
+    balanceInput.addEventListener('input', formatBalanceInput);
+    balanceInput.addEventListener('blur', formatBalanceInput);
 }
 
 // Close edit balance modal
 function closeEditBalanceModal() {
     editBalanceModal.classList.remove('show');
     setTimeout(() => editBalanceModal.style.display = 'none', 300);
+
+    // Remove event listeners
+    const balanceInput = document.getElementById('new-balance');
+    balanceInput.removeEventListener('input', formatBalanceInput);
+    balanceInput.removeEventListener('blur', formatBalanceInput);
+
     currentEditingUser = null;
 }
 
@@ -193,7 +259,8 @@ editBalanceModal.addEventListener('click', (e) => {
 
 // Save balance changes
 saveBalance.addEventListener('click', async () => {
-    const newBalance = parseFloat(document.getElementById('new-balance').value);
+    const newBalance = parseFloat(document.getElementById('new-balance').value.replace(/,/g, ''));
+    const selectedCoin = document.getElementById('balance-coin').value;
     const reason = document.getElementById('edit-reason').value.trim();
 
     if (isNaN(newBalance) || newBalance < 0) {
@@ -201,19 +268,80 @@ saveBalance.addEventListener('click', async () => {
         return;
     }
 
+    if (!selectedCoin) {
+        showMessage('Please select a coin for the balance.', 'error');
+        return;
+    }
+
     try {
-        // In production, update balance in database
-        // For demo, we'll just update the local array
+        // Calculate amount for the selected coin
+        const coinPrice = coinPrices[selectedCoin];
+        if (!coinPrice) {
+            showMessage('Invalid coin selected.', 'error');
+            return;
+        }
+
+        const coinAmount = newBalance / coinPrice;
+
+        // Fetch current portfolio
+        let currentPortfolio = [];
+        if (window.supabaseClient) {
+            const { data: user, error: fetchError } = await window.supabaseClient
+                .from('users')
+                .select('portfolio')
+                .eq('id', currentEditingUser.id)
+                .single();
+
+            if (fetchError) {
+                console.error('Error fetching current portfolio:', fetchError);
+                currentPortfolio = [];
+            } else {
+                currentPortfolio = user.portfolio || [];
+            }
+        }
+
+        // Update portfolio with new coin amount
+        const updatedPortfolio = currentPortfolio.filter(coin => coin.symbol !== selectedCoin);
+        updatedPortfolio.push({
+            symbol: selectedCoin,
+            amount: coinAmount
+        });
+
+        // Calculate total balance from all coins in portfolio
+        const totalBalance = updatedPortfolio.reduce((sum, coin) => {
+            const price = coinPrices[coin.symbol] || 0;
+            return sum + (coin.amount * price);
+        }, 0);
+
+        // Update user in Supabase
+        if (window.supabaseClient) {
+            const { error } = await window.supabaseClient
+                .from('users')
+                .update({
+                    balance: totalBalance,
+                    portfolio: updatedPortfolio,
+                    updatedat: new Date().toISOString()
+                })
+                .eq('id', currentEditingUser.id);
+
+            if (error) {
+                console.error('Supabase update error:', error);
+                showMessage('Error updating balance in database. Please try again.', 'error');
+                return;
+            }
+        }
+
+        // Update local array
         const userIndex = allUsers.findIndex(user => user.id === currentEditingUser.id);
         if (userIndex !== -1) {
-            allUsers[userIndex].balance = newBalance;
+            allUsers[userIndex].balance = totalBalance;
 
             // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 500));
 
             displayUsers(allUsers);
             updateOverviewStats();
-            showMessage('Balance updated successfully!', 'success');
+            showMessage(`Balance updated successfully! Set ${newBalance.toFixed(2)} USD worth of ${selectedCoin} (${coinAmount.toFixed(6)} ${selectedCoin}).`, 'success');
             closeEditBalanceModal();
         }
     } catch (error) {
@@ -300,10 +428,57 @@ document.getElementById('view-logs').addEventListener('click', () => {
     showMessage('System logs feature coming soon!', 'info');
 });
 
+// ===== UTILITY FUNCTIONS =====
+
+// Format number with comma separators for thousands
+function formatNumberWithCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// Format balance input field with commas
+function formatBalanceInput(e) {
+    let value = e.target.value.replace(/,/g, ''); // Remove existing commas
+    if (!isNaN(value) && value !== '') {
+        // Allow partial input (like "123" or "123.4") and format it
+        let numValue = parseFloat(value);
+        if (!isNaN(numValue)) {
+            // Format with commas but preserve decimal input
+            let formatted = numValue.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+            e.target.value = formatted;
+        }
+    } else if (value === '') {
+        e.target.value = '';
+    }
+}
+
+// ===== AUTHENTICATION CHECK =====
+
+// Check if user is logged in as admin
+function checkAdminAuthentication() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    if (!currentUser.email || currentUser.email !== ADMIN_EMAIL) {
+        // Not logged in as admin, redirect to login
+        alert('Access denied. Admin privileges required.');
+        window.location.href = 'login.html';
+        return false;
+    }
+
+    return true;
+}
+
 // ===== INITIALIZATION =====
 
 // Initialize the admin panel
 document.addEventListener('DOMContentLoaded', () => {
+    // Check admin authentication first
+    if (!checkAdminAuthentication()) {
+        return; // Stop initialization if not admin
+    }
+
     // Set default active section
     document.getElementById('users-section').classList.add('active');
 

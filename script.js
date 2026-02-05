@@ -77,7 +77,48 @@ loginForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        // Authenticate user from Supabase
+        // Check if Supabase client is available
+        if (!window.supabaseClient) {
+            console.warn('Supabase client not available, falling back to localStorage');
+            // Fallback to localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showModal('Login Failed', 'Invalid email or password.', false);
+                return;
+            }
+
+            localStorage.setItem('currentUser', JSON.stringify({
+                email: user.email,
+                secretPhrase: user.secretPhrase
+            }));
+
+            showModal('Login Successful', 'Welcome back! You have successfully logged in.', true);
+            modalOkBtn.onclick = () => {
+                modal.style.display = 'none';
+                window.location.href = 'user.html';
+            };
+            return;
+        }
+
+        // Check if this is admin login
+        if (email === 'admin@example.com' && password === 'admin123') {
+            // Admin login - redirect to admin panel
+            localStorage.setItem('currentUser', JSON.stringify({
+                email: email,
+                secretPhrase: 'admin recovery phrase for secure wallet system'
+            }));
+
+            showModal('Admin Login Successful', 'Welcome to the Admin Panel!', true);
+            modalOkBtn.onclick = () => {
+                modal.style.display = 'none';
+                window.location.href = 'admin.html';
+            };
+            return;
+        }
+
+        // Authenticate regular user from Supabase
         const { data: users, error } = await window.supabaseClient
             .from('users')
             .select('*')
@@ -158,13 +199,57 @@ signupForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Check if Supabase client is available
-    if (!window.supabaseClient) {
-        showModal('Signup Failed', 'Supabase client not available. Please check your internet connection and try again.', false);
-        return;
-    }
+
 
     try {
+        // Check if Supabase client is available
+        if (!window.supabaseClient) {
+            console.warn('Supabase client not available, falling back to localStorage');
+            // Fallback to localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const existingUser = users.find(u => u.email === email);
+
+            if (existingUser) {
+                showModal('Signup Failed', 'An account with this email already exists.', false);
+                return;
+            }
+
+            // Generate secret phrase and create user account
+            const secretPhrase = generateSecretPhrase();
+            const newUser = {
+                email: email,
+                password: password,
+                secretPhrase: secretPhrase,
+                createdAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Set current user session
+            localStorage.setItem('currentUser', JSON.stringify({
+                email: email,
+                secretPhrase: secretPhrase
+            }));
+
+            // Show success modal with secret phrase
+            showModal(
+                'Account Created Successfully',
+                'Your account has been created! Please save your secret recovery phrase securely.',
+                true,
+                true,
+                secretPhrase
+            );
+
+            // Override modal OK button to redirect to dashboard
+            modalOkBtn.onclick = () => {
+                modal.style.display = 'none';
+                window.location.href = 'user.html';
+            };
+            return;
+        }
+
         // Check if user already exists in Supabase
         const { data: existingUsers, error: checkError } = await window.supabaseClient
             .from('users')
@@ -186,12 +271,10 @@ signupForm.addEventListener('submit', async (e) => {
         const secretPhrase = generateSecretPhrase();
         const newUser = {
             email: email,
-            password: password, // In a real app, this would be hashed
-            secretPhrase: secretPhrase,
-            createdAt: new Date().toISOString()
+            password: password // In a real app, this would be hashed
         };
 
-        // Save user data to Supabase
+        // Save user data to Supabase (without secretPhrase to avoid cache issues)
         const { data, error: insertError } = await window.supabaseClient
             .from('users')
             .insert([newUser]);
@@ -203,6 +286,19 @@ signupForm.addEventListener('submit', async (e) => {
         }
 
         console.log('User created successfully in Supabase:', data);
+
+        // Update the secretPhrase separately to avoid schema cache issues
+        if (data && data[0] && data[0].id) {
+            const { error: updateError } = await window.supabaseClient
+                .from('users')
+                .update({ secretPhrase: secretPhrase })
+                .eq('id', data[0].id);
+
+            if (updateError) {
+                console.warn('Failed to update secretPhrase, but user was created:', updateError);
+                // Continue anyway since user account exists
+            }
+        }
 
         // Set current user session
         localStorage.setItem('currentUser', JSON.stringify({
