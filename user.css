@@ -1062,3 +1062,283 @@ body {
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet and Mobile Styles */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 1000;
+        height: 100vh;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .section-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .balance-card {
+        padding: 25px;
+    }
+
+    .balance-amount {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .balance-amount #total-balance {
+        font-size: 2.2rem;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .action-btn {
+        padding: 18px 12px;
+        font-size: 0.9rem;
+    }
+
+    .portfolio-list {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .coin-amount,
+    .coin-price {
+        text-align: left;
+    }
+
+    .dapp-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 400px;
+    }
+
+    .dapp-sidebar {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .dapp-browser {
+        height: 400px;
+    }
+
+    .nft-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .nft-card {
+        margin: 0;
+    }
+
+    .settings-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .settings-group {
+        padding: 20px;
+    }
+
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .overview-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .users-table-container {
+        overflow-x: auto;
+    }
+
+    .users-table {
+        min-width: 600px;
+    }
+
+    .analytics-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .analytics-card {
+        padding: 20px;
+        text-align: center;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 15px 10px;
+    }
+
+    .section-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .balance-card {
+        padding: 20px;
+    }
+
+    .balance-amount #total-balance {
+        font-size: 1.8rem;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .action-btn {
+        padding: 16px 12px;
+        font-size: 0.85rem;
+        min-height: 50px;
+    }
+
+    .portfolio-item {
+        padding: 15px;
+    }
+
+    .coin-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .coin-details h4 {
+        font-size: 1rem;
+    }
+
+    .dapp-sidebar {
+        padding: 15px;
+    }
+
+    .dapp-browser {
+        height: 300px;
+    }
+
+    .nft-grid {
+        gap: 15px;
+    }
+
+    .nft-card {
+        border-radius: 12px;
+    }
+
+    .nft-image {
+        height: 200px;
+    }
+
+    .nft-info {
+        padding: 15px;
+    }
+
+    .nft-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .settings-group {
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 98%;
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .modal-header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+
+    .action-submit-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .users-table {
+        font-size: 0.85rem;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-input {
+        width: 100%;
+        padding-right: 40px;
+    }
+}
