@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureWallet - Dashboard</title>
+    <link rel="stylesheet" href="user.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <span>SecureWallet</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </li>
+                <li class="nav-item" data-section="dapp">
+                    <i class="fas fa-globe"></i>
+                    <span>DApp Browser</span>
+                </li>
+                <li class="nav-item" data-section="nft">
+                    <i class="fas fa-image"></i>
+                    <span>NFT Gallery</span>
+                </li>
+                <li class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home/Wallet Section -->
+            <section id="home-section" class="section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span>Welcome back!</span>
+                    </div>
+                </div>
+
+                <!-- Total Balance -->
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <h2>Total Balance</h2>
+                        <div class="balance-refresh">
+                            <button id="refresh-balance" class="refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="balance-amount">
+                        <span id="total-balance">$0.00</span>
+                        <span class="balance-change" id="balance-change">+0.00%</span>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="action-btn send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Send</span>
+                        </button>
+                        <button class="action-btn receive-btn">
+                            <i class="fas fa-download"></i>
+                            <span>Receive</span>
+                        </button>
+                        <button class="action-btn buy-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Buy</span>
+                        </button>
+                        <button class="action-btn swap-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Swap</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Portfolio -->
+                <div class="portfolio-section">
+                    <h2>Your Portfolio</h2>
+                    <div class="portfolio-list" id="portfolio-list">
+                        <div class="portfolio-item">
+                            <div class="coin-info">
+                                <div class="coin-icon">
+                                    <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC">
+                                </div>
+                                <div class="coin-details">
+                                    <h4>Bitcoin</h4>
+                                    <span class="coin-symbol">BTC</span>
+                                </div>
+                            </div>
+                            <div class="coin-amount">
+                                <span class="amount">0 BTC</span>
+                                <span class="value">$0.00</span>
+                            </div>
+                            <div class="coin-price">
+                                <span class="price">$0.00</span>
+                                <span class="change">0.00%</span>
+                            </div>
+                        </div>
+                        <div class="portfolio-item">
+                            <div class="coin-info">
+                                <div class="coin-icon">
+                                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" alt="BNB">
+                                </div>
+                                <div class="coin-details">
+                                    <h4>Binance Coin</h4>
+                                    <span class="coin-symbol">BNB</span>
+                                </div>
+                            </div>
+                            <div class="coin-amount">
+                                <span class="amount">0 BNB</span>
+                                <span class="value">$0.00</span>
+                            </div>
+                            <div class="coin-price">
+                                <span class="price">$0.00</span>
+                                <span class="change">0.00%</span>
+                            </div>
+                        </div>
+                        <div class="portfolio-item">
+                            <div class="coin-info">
+                                <div class="coin-icon">
+                                    <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH">
+                                </div>
+                                <div class="coin-details">
+                                    <h4>Ethereum</h4>
+                                    <span class="coin-symbol">ETH</span>
+                                </div>
+                            </div>
+                            <div class="coin-amount">
+                                <span class="amount">0 ETH</span>
+                                <span class="value">$0.00</span>
+                            </div>
+                            <div class="coin-price">
+                                <span class="price">$0.00</span>
+                                <span class="change">0.00%</span>
+                            </div>
+                        </div>
+                        <div class="portfolio-item">
+                            <div class="coin-info">
+                                <div class="coin-icon">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT">
+                                </div>
+                                <div class="coin-details">
+                                    <h4>Tether</h4>
+                                    <span class="coin-symbol">USDT</span>
+                                </div>
+                            </div>
+                            <div class="coin-amount">
+                                <span class="amount">0 USDT</span>
+                                <span class="value">$0.00</span>
+                            </div>
+                            <div class="coin-price">
+                                <span class="price">$0.00</span>
+                                <span class="change">0.00%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DApp Browser Section -->
+            <section id="dapp-section" class="section">
+                <div class="section-header">
+                    <h1>DApp Browser</h1>
+                    <div class="browser-controls">
+                        <input type="url" id="dapp-url" placeholder="Enter DApp URL" class="url-input">
+                        <button id="load-dapp" class="load-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dapp-container">
+                    <div class="dapp-sidebar">
+                        <h3>Popular DApps</h3>
+                        <div class="dapp-list">
+                            <div class="dapp-item" data-url="https://uniswap.org">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Uniswap</span>
+                            </div>
+                            <div class="dapp-item" data-url="https://opensea.io">
+                                <i class="fas fa-store"></i>
+                                <span>OpenSea</span>
+                            </div>
+                            <div class="dapp-item" data-url="https://compound.finance">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Compound</span>
+                            </div>
+                            <div class="dapp-item" data-url="https://aave.com">
+                                <i class="fas fa-piggy-bank"></i>
+                                <span>Aave</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dapp-browser">
+                        <iframe id="dapp-iframe" src="about:blank" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NFT Gallery Section -->
+            <section id="nft-section" class="section">
+                <div class="section-header">
+                    <h1>NFT Gallery</h1>
+                    <div class="nft-controls">
+                        <select id="nft-filter" class="filter-select">
+                            <option value="all">All NFTs</option>
+                            <option value="art">Art</option>
+                            <option value="collectibles">Collectibles</option>
+                            <option value="gaming">Gaming</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="nft-grid" id="nft-grid">
+                    <!-- Sample NFTs -->
+                    <div class="nft-card">
+                        <div class="nft-image">
+                            <img src="https://via.placeholder.com/300x300/4facfe/ffffff?text=NFT+1" alt="NFT 1">
+                        </div>
+                        <div class="nft-info">
+                            <h3>Crypto Punk #1234</h3>
+                            <p class="nft-description">A unique Crypto Punk collectible</p>
+                            <div class="nft-price">
+                                <span class="price">2.5 ETH</span>
+                                <span class="usd-price">$4,250.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nft-card">
+                        <div class="nft-image">
+                            <img src="https://via.placeholder.com/300x300/00f2fe/ffffff?text=NFT+2" alt="NFT 2">
+                        </div>
+                        <div class="nft-info">
+                            <h3>Bored Ape #5678</h3>
+                            <p class="nft-description">Exclusive Bored Ape Yacht Club member</p>
+                            <div class="nft-price">
+                                <span class="price">15.8 ETH</span>
+                                <span class="usd-price">$26,860.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nft-card">
+                        <div class="nft-image">
+                            <img src="https://via.placeholder.com/300x300/764ba2/ffffff?text=NFT+3" alt="NFT 3">
+                        </div>
+                        <div class="nft-info">
+                            <h3>Digital Art #999</h3>
+                            <p class="nft-description">Beautiful digital artwork</p>
+                            <div class="nft-price">
+                                <span class="price">0.8 ETH</span>
+                                <span class="usd-price">$1,360.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section">
+                <div class="section-header">
+                    <h1>Settings</h1>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-group">
+                        <h2>Wallet Management</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Backup Recovery Phrase</h3>
+                                <p>Secure your wallet with a recovery phrase</p>
+                            </div>
+                            <button class="setting-btn" id="backup-phrase">
+                                <i class="fas fa-shield-alt"></i>
+                                Backup
+                            </button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Export Private Key</h3>
+                                <p>Export your wallet's private key</p>
+                            </div>
+                            <button class="setting-btn" id="export-key">
+                                <i class="fas fa-key"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h2>Security</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>PIN Code</h3>
+                                <p>Set up a PIN for quick access</p>
+                            </div>
+                            <button class="setting-btn" id="set-pin">
+                                <i class="fas fa-lock"></i>
+                                Set PIN
+                            </button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Biometric Authentication</h3>
+                                <p>Use fingerprint or face recognition</p>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="biometric-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h2>Networks & Tokens</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Add Custom Token</h3>
+                                <p>Add tokens not listed automatically</p>
+                            </div>
+                            <button class="setting-btn" id="add-token">
+                                <i class="fas fa-plus"></i>
+                                Add Token
+                            </button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Network Settings</h3>
+                                <p>Manage blockchain networks</p>
+                            </div>
+                            <button class="setting-btn" id="network-settings">
+                                <i class="fas fa-network-wired"></i>
+                                Networks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="action-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="action-modal-title">Action</h3>
+                <button id="action-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="send-form" class="action-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="send-address">Recipient Address</label>
+                        <input type="text" id="send-address" placeholder="Enter wallet address">
+                    </div>
+                    <div class="form-group">
+                        <label for="send-amount">Amount</label>
+                        <input type="number" id="send-amount" placeholder="0.00" step="0.0001">
+                        <select id="send-currency">
+                            <option value="ETH">ETH</option>
+                            <option value="BTC">BTC</option>
+                            <option value="USDT">USDT</option>
+                        </select>
+                    </div>
+                    <button id="send-submit" class="action-submit-btn">Send</button>
+                </div>
+                <div id="receive-form" class="action-form" style="display: none;">
+                    <div class="qr-code">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <p>Your wallet address:</p>
+                    <div class="address-display">0x1234...5678</div>
+                    <button id="copy-address" class="copy-btn">
+                        <i class="fas fa-copy"></i>
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="user.js"></script>
+</body>
+</html>

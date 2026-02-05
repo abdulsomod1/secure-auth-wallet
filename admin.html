@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - SecureWallet</title>
+    <link rel="stylesheet" href="user.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    <span>Admin Panel</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>User Management</span>
+                </li>
+                <li class="nav-item" data-section="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </li>
+                <li class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- User Management Section -->
+            <section id="users-section" class="section active">
+                <div class="section-header">
+                    <h1>User Management</h1>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <span>Admin Dashboard</span>
+                    </div>
+                </div>
+
+                <!-- Users Overview -->
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <h2>Users Overview</h2>
+                        <div class="balance-refresh">
+                            <button id="refresh-users" class="refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overview-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-users">0</span>
+                            <span class="stat-label">Total Users</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-balance">$0.00</span>
+                            <span class="stat-label">Total Balance</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="active-users">0</span>
+                            <span class="stat-label">Active Users</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="users-section">
+                    <div class="section-header">
+                        <h2>All Users</h2>
+                        <div class="search-container">
+                            <input type="text" id="user-search" placeholder="Search users by email..." class="search-input">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+                    <div class="users-table-container">
+                        <table class="users-table" id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr>
+                                    <td colspan="4" class="loading-row">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Loading users...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="section">
+                <div class="section-header">
+                    <h1>Analytics</h1>
+                </div>
+                <div class="analytics-content">
+                    <div class="analytics-card">
+                        <h3>User Registration Trends</h3>
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line"></i>
+                            <p>Analytics coming soon...</p>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Balance Distribution</h3>
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-pie"></i>
+                            <p>Analytics coming soon...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section">
+                <div class="section-header">
+                    <h1>Admin Settings</h1>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-group">
+                        <h2>System Management</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Database Backup</h3>
+                                <p>Create a backup of user data</p>
+                            </div>
+                            <button class="setting-btn" id="backup-data">
+                                <i class="fas fa-download"></i>
+                                Backup
+                            </button>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>System Logs</h3>
+                                <p>View system activity logs</p>
+                            </div>
+                            <button class="setting-btn" id="view-logs">
+                                <i class="fas fa-file-alt"></i>
+                                View Logs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Balance Modal -->
+    <div id="edit-balance-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit User Balance</h3>
+                <button id="edit-balance-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-info-display">
+                    <p><strong>Email:</strong> <span id="edit-user-email"></span></p>
+                    <p><strong>Current Balance:</strong> $<span id="edit-current-balance">0.00</span></p>
+                </div>
+                <div class="form-group">
+                    <label for="new-balance">New Balance ($)</label>
+                    <input type="number" id="new-balance" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="edit-reason">Reason for change</label>
+                    <textarea id="edit-reason" placeholder="Optional reason for balance change..." rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-edit" class="btn-secondary">Cancel</button>
+                <button id="save-balance" class="btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-toast" class="message-toast" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="message-text">Operation successful</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
