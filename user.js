@@ -624,7 +624,7 @@ logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('currentUser');
 
         // Redirect to login
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 });
 

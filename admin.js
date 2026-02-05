@@ -396,11 +396,11 @@ const logoutBtn = document.querySelector('.logout-btn');
 logoutBtn.addEventListener('click', async () => {
     try {
         await window.supabaseClient.auth.signOut();
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     } catch (error) {
         console.error('Error signing out:', error);
         // Fallback to redirect
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 });
 
@@ -463,7 +463,7 @@ function checkAdminAuthentication() {
     if (!currentUser.email || currentUser.email !== ADMIN_EMAIL) {
         // Not logged in as admin, redirect to login
         alert('Access denied. Admin privileges required.');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
         return false;
     }
 
