@@ -575,13 +575,7 @@ receiveBtn.addEventListener('click', () => {
 
 // Buy button
 buyBtn.addEventListener('click', () => {
-    loadDApp('https://www.kraken.com/buy');
-    // Switch to DApp section
-    const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
-    navItems.forEach(nav => nav.classList.remove('active'));
-    dappNavItem.classList.add('active');
-    sections.forEach(section => section.classList.remove('active'));
-    document.getElementById('dapp-section').classList.add('active');
+    window.open('https://www.kraken.com/buy', '_blank');
 });
 
 // Swap button
