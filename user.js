@@ -568,17 +568,31 @@ receiveBtn.addEventListener('click', () => {
     actionModalTitle.textContent = 'Receive Crypto';
     sendForm.style.display = 'none';
     receiveForm.style.display = 'block';
+    // Set initial address for BTC
+    walletAddressDisplay.textContent = walletAddresses['BTC'];
     actionModal.classList.add('show');
 });
 
-// Buy button (placeholder)
+// Buy button
 buyBtn.addEventListener('click', () => {
-    alert('Buy functionality coming soon!');
+    loadDApp('https://www.coinbase.com/buy');
+    // Switch to DApp section
+    const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
+    navItems.forEach(nav => nav.classList.remove('active'));
+    dappNavItem.classList.add('active');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById('dapp-section').classList.add('active');
 });
 
-// Swap button (placeholder)
+// Swap button
 swapBtn.addEventListener('click', () => {
-    alert('Swap functionality coming soon!');
+    loadDApp('https://uniswap.org/');
+    // Switch to DApp section
+    const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
+    navItems.forEach(nav => nav.classList.remove('active'));
+    dappNavItem.classList.add('active');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById('dapp-section').classList.add('active');
 });
 
 // Close modal
