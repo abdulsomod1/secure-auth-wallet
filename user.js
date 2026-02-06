@@ -601,7 +601,7 @@ sendSubmitBtn.addEventListener('click', () => {
 
 // Wallet addresses for different coins
 const walletAddresses = {
-    'BTC': 'bc1qv862cqqesd24mknyjlf22nrg4hl8deqcrax8nj',
+    'BTC': 'bc1qg9rtnx87ha4flmm4295mwj9j3m8aztpalty8za',
     'ETH': '0x695ef4038416D42cC267Fe767816963f7A528379',
     'USDT': '0x695ef4038416D42cC267Fe767816963f7A528379'
 };
