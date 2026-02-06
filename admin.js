@@ -400,8 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Check if balance exceeds database limit (DECIMAL(10,2) max is 99,999,999.99)
-        if (newBalance > 99999999.99) {
-            showMessage('Balance amount too large. Maximum allowed is $99,999,999.99', 'error');
+        if (newBalance > 999999999.99) {
+            showMessage('Balance amount too large. Maximum allowed is $999,999,999.99', 'error');
             return;
         }
 
