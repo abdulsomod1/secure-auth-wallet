@@ -339,8 +339,9 @@ saveBalance.addEventListener('click', async () => {
             // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            displayUsers(allUsers);
-            updateOverviewStats();
+            // Refresh data from database to ensure consistency
+            await fetchUsers();
+
             showMessage(`Balance updated successfully! Set ${newBalance.toFixed(2)} USD worth of ${selectedCoin} (${coinAmount.toFixed(6)} ${selectedCoin}).`, 'success');
             closeEditBalanceModal();
         }
