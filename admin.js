@@ -334,9 +334,9 @@ function formatBalanceInput(e) {
         // Allow partial input (like "123" or "123.4") and format it
         let numValue = parseFloat(value);
         if (!isNaN(numValue)) {
-            // Format with commas but preserve decimal input
+            // Format with commas and always show two decimal places
             let formatted = numValue.toLocaleString('en-US', {
-                minimumFractionDigits: 0,
+                minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
             e.target.value = formatted;
