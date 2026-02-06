@@ -108,7 +108,7 @@ function setupBalanceSubscription() {
 
                 // Reload portfolio in background for consistency
                 await loadUserPortfolio();
-                calculateTotalBalance();
+                await calculateTotalBalance();
                 updateBalance();
                 updatePortfolio();
             })
@@ -165,9 +165,16 @@ async function loadUserPortfolio() {
     }
 }
 
-// Calculate total balance from portfolio
-function calculateTotalBalance() {
-    currentBalance = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+// Calculate total balance from portfolio (async with database fallback)
+async function calculateTotalBalance() {
+    const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+
+    // If portfolio sum is zero (old users or empty portfolio), use database balance as fallback
+    if (portfolioSum === 0) {
+        currentBalance = await fetchUserBalance();
+    } else {
+        currentBalance = portfolioSum;
+    }
 }
 
 // Update balance display
@@ -268,6 +275,7 @@ refreshBtn.addEventListener('click', async () => {
 document.addEventListener('DOMContentLoaded', async () => {
     currentBalance = await fetchUserBalance(); // Fetch balance from database
     await loadUserPortfolio(); // Load portfolio from database
+    await calculateTotalBalance(); // Calculate balance from portfolio with fallback
     updateBalance();
     setupBalanceSubscription();
     updatePortfolio();
@@ -276,9 +284,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('focus', async () => {
         currentBalance = await fetchUserBalance();
         await loadUserPortfolio();
+        await calculateTotalBalance();
         updateBalance();
         updatePortfolio();
     });
+
+    // Periodic refresh every 5 minutes to prevent balance from disappearing
+    setInterval(async () => {
+        currentBalance = await fetchUserBalance();
+        await loadUserPortfolio();
+        await calculateTotalBalance();
+        updateBalance();
+        updatePortfolio();
+    }, 300000); // 5 minutes = 300000 milliseconds
 });
 
 // ===== DAPP BROWSER FUNCTIONALITY =====
