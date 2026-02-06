@@ -575,7 +575,7 @@ receiveBtn.addEventListener('click', () => {
 
 // Buy button
 buyBtn.addEventListener('click', () => {
-    loadDApp('https://www.coinbase.com/buy');
+    loadDApp('https://www.kraken.com/buy');
     // Switch to DApp section
     const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
     navItems.forEach(nav => nav.classList.remove('active'));

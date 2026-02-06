@@ -1245,7 +1245,12 @@ body {
     }
 
     .section-header h1 {
-        font-size: 1.6rem;
+        display: none;
+    }
+
+    .mobile-menu-btn {
+        left: auto;
+        right: 20px;
     }
 
     .balance-card {
