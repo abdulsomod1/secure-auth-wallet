@@ -56,7 +56,6 @@ async function fetchUserBalance() {
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!currentUser.email || !window.supabaseClient) {
-            console.log('No user logged in or Supabase not available');
             return 0.00;
         }
 
@@ -100,22 +99,22 @@ function setupBalanceSubscription() {
                 schema: 'public',
                 table: 'users',
                 filter: `email=eq.${currentUser.email}`
-            }, (payload) => {
-                console.log('Balance updated:', payload);
-                console.log('New balance:', payload.new.balance);
-                const newBalance = parseFloat(payload.new.balance) || 0.00;
-                currentBalance = newBalance;
-                updateBalance();
-                // Reload portfolio when balance changes
-                loadUserPortfolio().then(() => {
-                    updatePortfolio();
-                });
-            })
-            .subscribe((status) => {
-                console.log('Subscription status:', status);
-            });
+            }, async (payload) => {
+                // Update balance directly from payload for immediate update
+                if (payload.new && payload.new.balance !== undefined) {
+                    currentBalance = parseFloat(payload.new.balance) || 0.00;
+                    updateBalance();
+                }
 
-        console.log('Balance subscription set up for email:', currentUser.email);
+                // Reload portfolio in background for consistency
+                await loadUserPortfolio();
+                calculateTotalBalance();
+                updateBalance();
+                updatePortfolio();
+            })
+            .subscribe();
+
+        // Balance subscription set up
     } catch (error) {
         console.error('Error setting up balance subscription:', error);
     }
@@ -134,7 +133,6 @@ async function loadUserPortfolio() {
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!currentUser.email || !window.supabaseClient) {
-            console.log('No user logged in or Supabase not available');
             return;
         }
 
@@ -165,6 +163,11 @@ async function loadUserPortfolio() {
     } catch (error) {
         console.error('Error loading user portfolio:', error);
     }
+}
+
+// Calculate total balance from portfolio
+function calculateTotalBalance() {
+    currentBalance = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
 }
 
 // Update balance display
@@ -228,6 +231,11 @@ const refreshBtn = document.getElementById('refresh-balance');
 refreshBtn.addEventListener('click', async () => {
     refreshBtn.classList.add('spinning');
 
+    // Always refresh portfolio and balance from database first
+    await loadUserPortfolio();
+    calculateTotalBalance();
+    updateBalance();
+
     // Fetch live prices
     const livePrices = await fetchLivePrices();
     if (livePrices) {
@@ -258,11 +266,19 @@ refreshBtn.addEventListener('click', async () => {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
-    currentBalance = await fetchUserBalance();
+    currentBalance = await fetchUserBalance(); // Fetch balance from database
     await loadUserPortfolio(); // Load portfolio from database
     updateBalance();
     setupBalanceSubscription();
     updatePortfolio();
+
+    // Add focus listener to refresh balance and portfolio when window regains focus
+    window.addEventListener('focus', async () => {
+        currentBalance = await fetchUserBalance();
+        await loadUserPortfolio();
+        updateBalance();
+        updatePortfolio();
+    });
 });
 
 // ===== DAPP BROWSER FUNCTIONALITY =====
@@ -330,7 +346,7 @@ const nftData = [
         id: 1,
         name: 'Crypto Punk #1234',
         description: 'A unique Crypto Punk collectible',
-        image: 'https://via.placeholder.com/300x300/4facfe/ffffff?text=NFT+1',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRmYWNmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsxPC90ZXh0Pjwvc3ZnPg==',
         price: 2.5,
         currency: 'ETH',
         usdPrice: 4250.00,
@@ -340,7 +356,7 @@ const nftData = [
         id: 2,
         name: 'Bored Ape #5678',
         description: 'Exclusive Bored Ape Yacht Club member',
-        image: 'https://via.placeholder.com/300x300/00f2fe/ffffff?text=NFT+2',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwZjJmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsyPC90ZXh0Pjwvc3ZnPg==',
         price: 15.8,
         currency: 'ETH',
         usdPrice: 26860.00,
@@ -350,7 +366,7 @@ const nftData = [
         id: 3,
         name: 'Digital Art #999',
         description: 'Beautiful digital artwork',
-        image: 'https://via.placeholder.com/300x300/764ba2/ffffff?text=NFT+3',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzc2NGJhMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCszPC90ZXh0Pjwvc3ZnPg==',
         price: 0.8,
         currency: 'ETH',
         usdPrice: 1360.00,
@@ -360,7 +376,7 @@ const nftData = [
         id: 4,
         name: 'Gaming Asset #456',
         description: 'Rare gaming collectible',
-        image: 'https://via.placeholder.com/300x300/f093fb/ffffff?text=NFT+4',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2YwOTNmYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCs0PC90ZXh0Pjwvc3ZnPg==',
         price: 1.2,
         currency: 'ETH',
         usdPrice: 2040.00,
@@ -370,7 +386,7 @@ const nftData = [
         id: 5,
         name: 'Abstract Art #789',
         description: 'Modern abstract digital art',
-        image: 'https://via.placeholder.com/300x300/f5576c/ffffff?text=NFT+5',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y1NTc2YyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCs1PC90ZXh0Pjwvc3ZnPg==',
         price: 3.1,
         currency: 'ETH',
         usdPrice: 5270.00,
@@ -380,7 +396,7 @@ const nftData = [
         id: 6,
         name: 'Virtual Land #101',
         description: 'Metaverse virtual land parcel',
-        image: 'https://via.placeholder.com/300x300/4ecdc4/ffffff?text=NFT+6',
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRlY2RjNCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCs2PC90ZXh0Pjwvc3ZnPg==',
         price: 5.5,
         currency: 'ETH',
         usdPrice: 9350.00,
@@ -657,3 +673,5 @@ async function fetchLivePrices() {
     // This would fetch from CoinGecko API in a real implementation
     return null;
 }
+
+

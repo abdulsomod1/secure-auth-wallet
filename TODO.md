@@ -1,12 +1,12 @@
-# TODO: Implement Deposit and Withdraw Functionality
+# TODO List
 
-## Tasks
-- [ ] Modify receive modal in user.html to include coin selection (BTC, ETH, USDT)
-- [ ] Update user.js to handle coin selection in receive modal and display corresponding wallet addresses
-- [ ] Ensure withdraw (send) functionality works with existing currency selection
-- [ ] Test deposit and withdraw modals
+## Admin Panel Balance Edit Fix
+- [x] Fixed "Save Changes" button in admin panel edit balance modal
+- [x] Changed portfolio update logic from adding to existing balance to replacing with new balance
+- [x] Ensured no unnecessary code was deleted
 
-## Addresses
-- BTC: bc1qv862cqqesd24mknyjlf22nrg4hl8deqcrax8nj
-- ETH: 0x695ef4038416D42cC267Fe767816963f7A528379
-- USDT: 0x695ef4038416D42cC267Fe767816963f7A528379
+## Testing
+- [x] Test the admin panel balance editing functionality
+- [x] Verify that balance updates correctly in database
+- [x] Confirm modal closes and shows success message after save
+- [x] Fixed user balance not updating from admin changes - added calculateTotalBalance function and updated initialization

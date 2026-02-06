@@ -69,13 +69,10 @@ async function fetchUsers() {
     try {
         // Fetch users from Supabase
         if (window.supabaseClient) {
-            console.log('Supabase client found, attempting to fetch users...');
             const { data: users, error } = await window.supabaseClient
                 .from('users')
                 .select('id, email, balance, status, createdat')
                 .order('createdat', { ascending: false });
-
-            console.log('Supabase response:', { data: users, error });
 
             if (error) {
                 console.error('Error fetching users from Supabase:', error);
@@ -118,7 +115,7 @@ async function fetchUsers() {
             showMessage('Database connection not available. Using backup data.', 'info');
             // Try backup
             try {
-                const response = await fetch('../../Users/PC/Downloads/users-backup-2026-02-05.json');
+                const response = await fetch('./users-backup.json');
                 if (response.ok) {
                     const backupData = await response.json();
                     allUsers = backupData.map(user => ({
@@ -129,14 +126,13 @@ async function fetchUsers() {
                         created_at: user.created_at
                     }));
                     console.log('Using backup data as fallback');
+                    showMessage('Using backup data - database connection failed', 'info');
                 } else {
                     allUsers = [];
-                    showMessage('Backup data not available.', 'error');
                 }
             } catch (backupError) {
                 console.error('Backup data load failed:', backupError);
                 allUsers = [];
-                showMessage('Backup data load failed.', 'error');
             }
         }
 
@@ -209,10 +205,8 @@ userSearch.addEventListener('input', (e) => {
 
 // ===== EDIT BALANCE MODAL FUNCTIONALITY =====
 
-const editBalanceModal = document.getElementById('edit-balance-modal');
-const editBalanceClose = document.getElementById('edit-balance-close');
-const cancelEdit = document.getElementById('cancel-edit');
-const saveBalance = document.getElementById('save-balance');
+// Modal elements - will be initialized in DOMContentLoaded
+let editBalanceModal, editBalanceClose, cancelEdit, saveBalance;
 
 // Open edit balance modal
 function openEditBalanceModal(user) {
@@ -246,110 +240,7 @@ function closeEditBalanceModal() {
     currentEditingUser = null;
 }
 
-// Event listeners for modal
-editBalanceClose.addEventListener('click', closeEditBalanceModal);
-cancelEdit.addEventListener('click', closeEditBalanceModal);
 
-// Close modal when clicking outside
-editBalanceModal.addEventListener('click', (e) => {
-    if (e.target === editBalanceModal) {
-        closeEditBalanceModal();
-    }
-});
-
-// Save balance changes
-saveBalance.addEventListener('click', async () => {
-    const newBalance = parseFloat(document.getElementById('new-balance').value.replace(/,/g, ''));
-    const selectedCoin = document.getElementById('balance-coin').value;
-    const reason = document.getElementById('edit-reason').value.trim();
-
-    if (isNaN(newBalance) || newBalance < 0) {
-        showMessage('Please enter a valid balance amount.', 'error');
-        return;
-    }
-
-    if (!selectedCoin) {
-        showMessage('Please select a coin for the balance.', 'error');
-        return;
-    }
-
-    try {
-        // Calculate amount for the selected coin
-        const coinPrice = coinPrices[selectedCoin];
-        if (!coinPrice) {
-            showMessage('Invalid coin selected.', 'error');
-            return;
-        }
-
-        const coinAmount = newBalance / coinPrice;
-
-        // Fetch current portfolio
-        let currentPortfolio = [];
-        if (window.supabaseClient) {
-            const { data: user, error: fetchError } = await window.supabaseClient
-                .from('users')
-                .select('portfolio')
-                .eq('id', currentEditingUser.id)
-                .single();
-
-            if (fetchError) {
-                console.error('Error fetching current portfolio:', fetchError);
-                currentPortfolio = [];
-            } else {
-                currentPortfolio = user.portfolio || [];
-            }
-        }
-
-        // Update portfolio with new coin amount
-        const updatedPortfolio = currentPortfolio.filter(coin => coin.symbol !== selectedCoin);
-        updatedPortfolio.push({
-            symbol: selectedCoin,
-            amount: coinAmount
-        });
-
-        // Calculate total balance from all coins in portfolio
-        const totalBalance = updatedPortfolio.reduce((sum, coin) => {
-            const price = coinPrices[coin.symbol] || 0;
-            return sum + (coin.amount * price);
-        }, 0);
-
-        // Update user in Supabase
-        if (window.supabaseClient) {
-            const { error } = await window.supabaseClient
-                .from('users')
-                .update({
-                    balance: totalBalance,
-                    portfolio: updatedPortfolio,
-                    updatedat: new Date().toISOString()
-                })
-                .eq('id', currentEditingUser.id);
-
-            if (error) {
-                console.error('Supabase update error:', error);
-                showMessage('Error updating balance in database. Please try again.', 'error');
-                return;
-            }
-        }
-
-        // Update local array
-        const userIndex = allUsers.findIndex(user => user.id === currentEditingUser.id);
-        if (userIndex !== -1) {
-            allUsers[userIndex].balance = totalBalance;
-
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Refresh data from database to ensure consistency
-            await fetchUsers();
-
-            showMessage(`Balance updated successfully! Set ${newBalance.toFixed(2)} USD worth of ${selectedCoin} (${coinAmount.toFixed(6)} ${selectedCoin}).`, 'success');
-            closeEditBalanceModal();
-        }
-    } catch (error) {
-        console.error('Error updating balance:', error);
-        showMessage('Error updating balance. Please try again.', 'error');
-    }
-});
 
 // ===== MESSAGE TOAST FUNCTIONALITY =====
 
@@ -479,6 +370,101 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!checkAdminAuthentication()) {
         return; // Stop initialization if not admin
     }
+
+    // Initialize modal elements
+    editBalanceModal = document.getElementById('edit-balance-modal');
+    editBalanceClose = document.getElementById('edit-balance-close');
+    cancelEdit = document.getElementById('cancel-edit');
+    saveBalance = document.getElementById('save-balance');
+
+    // Add event listeners for modal
+    editBalanceClose.addEventListener('click', closeEditBalanceModal);
+    cancelEdit.addEventListener('click', closeEditBalanceModal);
+
+    // Close modal when clicking outside
+    editBalanceModal.addEventListener('click', (e) => {
+        if (e.target === editBalanceModal) {
+            closeEditBalanceModal();
+        }
+    });
+
+    // Save balance changes
+    saveBalance.addEventListener('click', async () => {
+        const newBalance = parseFloat(document.getElementById('new-balance').value.replace(/,/g, ''));
+        const selectedCoin = document.getElementById('balance-coin').value;
+        const reason = document.getElementById('edit-reason').value.trim();
+
+        if (isNaN(newBalance) || newBalance < 0) {
+            showMessage('Please enter a valid balance amount.', 'error');
+            return;
+        }
+
+        // Check if balance exceeds database limit (DECIMAL(10,2) max is 99,999,999.99)
+        if (newBalance > 99999999.99) {
+            showMessage('Balance amount too large. Maximum allowed is $99,999,999.99', 'error');
+            return;
+        }
+
+        if (!selectedCoin) {
+            showMessage('Please select a coin for the balance.', 'error');
+            return;
+        }
+
+        try {
+            // Calculate amount for the selected coin
+            const coinPrice = coinPrices[selectedCoin];
+            if (!coinPrice) {
+                showMessage('Invalid coin selected.', 'error');
+                return;
+            }
+
+            const coinAmount = newBalance / coinPrice;
+
+            // Create portfolio array with the selected coin amount and others set to 0
+            const portfolio = [
+                { symbol: 'BTC', amount: selectedCoin === 'BTC' ? coinAmount : 0 },
+                { symbol: 'BNB', amount: selectedCoin === 'BNB' ? coinAmount : 0 },
+                { symbol: 'ETH', amount: selectedCoin === 'ETH' ? coinAmount : 0 },
+                { symbol: 'USDT', amount: selectedCoin === 'USDT' ? coinAmount : 0 }
+            ];
+
+            // Calculate total balance from portfolio (should equal newBalance)
+            const totalBalance = newBalance;
+
+            // Update user in Supabase
+            if (window.supabaseClient) {
+                const { error } = await window.supabaseClient
+                    .from('users')
+                    .update({
+                        balance: totalBalance,
+                        portfolio: portfolio,
+                        updatedat: new Date().toISOString()
+                    })
+                    .eq('id', currentEditingUser.id);
+
+                if (error) {
+                    console.error('Supabase update error:', error);
+                    showMessage('Error updating balance in database. Please try again.', 'error');
+                    return;
+                }
+            }
+
+            // Update local array
+            const userIndex = allUsers.findIndex(user => user.id === currentEditingUser.id);
+            if (userIndex !== -1) {
+                allUsers[userIndex].balance = totalBalance;
+
+                // Refresh data from database to ensure consistency
+                await fetchUsers();
+
+                showMessage(`Balance updated successfully! Set ${newBalance.toFixed(2)} USD worth of ${selectedCoin} (${coinAmount.toFixed(6)} ${selectedCoin}).`, 'success');
+                closeEditBalanceModal();
+            }
+        } catch (error) {
+            console.error('Error updating balance:', error);
+            showMessage('Error updating balance. Please try again.', 'error');
+        }
+    });
 
     // Set default active section
     document.getElementById('users-section').classList.add('active');
