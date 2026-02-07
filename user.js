@@ -47,7 +47,7 @@ document.addEventListener('click', (e) => {
 // ===== BALANCE AND PORTFOLIO FUNCTIONALITY =====
 
 // Balance data
-let currentBalance = 0.00;
+let currentBalance = parseFloat(localStorage.getItem('cachedBalance') || '0.00');
 let balanceChange = 0.00;
 let userBalanceSubscription = null;
 
@@ -112,6 +112,14 @@ function setupBalanceSubscription() {
                 updateBalance();
                 updatePortfolio();
             })
+            .subscribe((status) => {
+                console.log('Balance subscription status:', status);
+                if (status === 'SUBSCRIBED') {
+                    console.log('Successfully subscribed to balance updates');
+                } else if (status === 'CLOSED') {
+                    console.log('Balance subscription closed');
+                }
+            })
             .subscribe();
 
         // Balance subscription set up
@@ -165,17 +173,18 @@ async function loadUserPortfolio() {
     }
 }
 
-// Calculate total balance from portfolio (async with database fallback)
+// Calculate total balance from database
 async function calculateTotalBalance() {
-    const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
-
-    // If portfolio sum is zero (old users or empty portfolio), use database balance as fallback
-    if (portfolioSum === 0) {
-        const dbBalance = await fetchUserBalance();
-        currentBalance = dbBalance !== null ? dbBalance : 0.00;
+    const dbBalance = await fetchUserBalance();
+    if (dbBalance !== null) {
+        currentBalance = dbBalance;
+        // Always cache the balance when successfully fetched
+        localStorage.setItem('cachedBalance', currentBalance.toString());
+        console.log('Balance updated from database:', currentBalance);
     } else {
-        currentBalance = portfolioSum;
+        console.log('Failed to fetch balance from database, keeping current balance:', currentBalance);
     }
+    // If fetch fails, keep the current balance to prevent it from disappearing
 }
 
 // Update balance display
@@ -272,19 +281,38 @@ refreshBtn.addEventListener('click', async () => {
     refreshBtn.classList.remove('spinning');
 });
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', async () => {
+// Function to initialize user data after Supabase is ready
+async function initializeUserData() {
     const dbBalance = await fetchUserBalance(); // Fetch balance from database
-    currentBalance = dbBalance !== null ? dbBalance : 0.00;
+    if (dbBalance !== null) {
+        currentBalance = dbBalance;
+        // Update cache with fresh database value
+        localStorage.setItem('cachedBalance', currentBalance.toString());
+    } // If dbBalance is null, keep the cached value from initialization
     await loadUserPortfolio(); // Load portfolio from database
     await calculateTotalBalance(); // Calculate balance from portfolio with fallback
     updateBalance();
     setupBalanceSubscription();
     updatePortfolio();
+    loadUserProfilePicture();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.supabaseClient) {
+        initializeUserData();
+    } else {
+        // Wait for Supabase client to be initialized
+        const checkSupabase = setInterval(() => {
+            if (window.supabaseClient) {
+                clearInterval(checkSupabase);
+                initializeUserData();
+            }
+        }, 100);
+    }
 
     // Add focus listener to refresh balance and portfolio when window regains focus
     window.addEventListener('focus', async () => {
-        currentBalance = await fetchUserBalance();
         await loadUserPortfolio();
         await calculateTotalBalance();
         updateBalance();
@@ -293,7 +321,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Periodic refresh every 5 minutes to prevent balance from disappearing
     setInterval(async () => {
-        currentBalance = await fetchUserBalance();
         await loadUserPortfolio();
         await calculateTotalBalance();
         updateBalance();
@@ -792,6 +819,9 @@ logoutBtn.addEventListener('click', () => {
 
         // Clear user session
         localStorage.removeItem('currentUser');
+
+        // Keep the cached balance for persistence across sessions
+        // localStorage.removeItem('cachedBalance'); // Don't remove this
 
         // Redirect to login
         window.location.href = 'index.html';
