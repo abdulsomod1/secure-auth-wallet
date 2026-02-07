@@ -53,6 +53,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_picture TEXT;
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_user_settings_email ON user_settings(email);
 
+-- Create storage bucket for user uploads
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('user-uploads', 'user-uploads', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create storage policies for user uploads (allow all operations since app uses custom auth)
+CREATE POLICY "Allow all operations on user-uploads" ON storage.objects
+FOR ALL USING (bucket_id = 'user-uploads');
+
 -- Insert a test user (optional - for testing)
 -- INSERT INTO users (email, password, secretPhrase) VALUES
 -- ('test@example.com', 'password123', 'test phrase for demo purposes');

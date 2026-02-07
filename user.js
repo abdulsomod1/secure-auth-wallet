@@ -50,6 +50,7 @@ document.addEventListener('click', (e) => {
 let currentBalance = parseFloat(localStorage.getItem('cachedBalance') || '0.00');
 let balanceChange = 0.00;
 let userBalanceSubscription = null;
+let balanceVisible = true;
 
 // Fetch user balance from database
 async function fetchUserBalance() {
@@ -192,7 +193,11 @@ function updateBalance() {
     const totalBalanceElement = document.getElementById('total-balance');
     const balanceChangeElement = document.getElementById('balance-change');
 
-    totalBalanceElement.textContent = `$${formatNumberWithCommas(currentBalance.toFixed(2))}`;
+    if (balanceVisible) {
+        totalBalanceElement.textContent = `$${formatNumberWithCommas(currentBalance.toFixed(2))}`;
+    } else {
+        totalBalanceElement.textContent = '';
+    }
 
     balanceChangeElement.textContent = `${balanceChange >= 0 ? '+' : ''}${balanceChange.toFixed(2)}%`;
     balanceChangeElement.className = `balance-change ${balanceChange >= 0 ? 'positive' : 'negative'}`;
@@ -296,6 +301,21 @@ async function initializeUserData() {
     updatePortfolio();
     loadUserProfilePicture();
 }
+
+// Eye icon toggle functionality
+const eyeIcon = document.getElementById('eye-icon');
+
+eyeIcon.addEventListener('click', () => {
+    balanceVisible = !balanceVisible;
+    updateBalance();
+
+    // Update icon
+    if (balanceVisible) {
+        eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
+    } else {
+        eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    }
+});
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -645,7 +665,17 @@ profilePictureInput.addEventListener('change', async (e) => {
 function updateUserAvatar(imageUrl) {
     const userAvatar = document.querySelector('.user-avatar');
     if (userAvatar && imageUrl) {
-        userAvatar.innerHTML = `<img src="${imageUrl}" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+        // Set the background image and keep the icon visible
+        userAvatar.style.backgroundImage = `url(${imageUrl})`;
+        userAvatar.style.backgroundSize = 'cover';
+        userAvatar.style.backgroundPosition = 'center';
+        userAvatar.style.backgroundRepeat = 'no-repeat';
+        // Ensure the icon remains visible if image fails to load
+        const icon = userAvatar.querySelector('i');
+        if (icon) {
+            icon.style.position = 'relative';
+            icon.style.zIndex = '1';
+        }
     }
 }
 

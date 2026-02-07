@@ -1,8 +1,6 @@
-# Profile Picture Upload & Mobile Nav Color Change
+# TODO: Add Eye Icon to Toggle Balance Visibility
 
-## Tasks
-- [ ] Update supabase-setup.sql to add profile_picture column to users table
-- [ ] Add profile picture upload UI to user.html settings section
-- [ ] Update user.js to handle file upload to Supabase storage and profile updates
-- [ ] Update user.css to change mobile nav background color and style profile picture
-- [ ] Test functionality on both desktop and mobile views
+## Steps to Complete:
+- [x] Add eye icon button to user.html in the .balance-amount div next to the balance span
+- [x] Add CSS styles for the eye icon in user.css (positioning, cursor, hover effects)
+- [x] Add JavaScript event listener in user.js to toggle balance visibility and icon state (fa-eye / fa-eye-slash)
