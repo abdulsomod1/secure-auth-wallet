@@ -193,10 +193,12 @@ function updateBalance() {
     const totalBalanceElement = document.getElementById('total-balance');
     const balanceChangeElement = document.getElementById('balance-change');
 
+    const formattedBalance = `$${formatNumberWithCommas(currentBalance.toFixed(2))}`;
+
     if (balanceVisible) {
-        totalBalanceElement.textContent = `$${formatNumberWithCommas(currentBalance.toFixed(2))}`;
+        totalBalanceElement.textContent = formattedBalance;
     } else {
-        totalBalanceElement.textContent = '';
+        totalBalanceElement.textContent = '*'.repeat(formattedBalance.length);
     }
 
     balanceChangeElement.textContent = `${balanceChange >= 0 ? '+' : ''}${balanceChange.toFixed(2)}%`;
