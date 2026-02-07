@@ -56,7 +56,7 @@ async function fetchUserBalance() {
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!currentUser.email || !window.supabaseClient) {
-            return 0.00;
+            return null;
         }
 
         const { data: user, error } = await window.supabaseClient
@@ -67,13 +67,13 @@ async function fetchUserBalance() {
 
         if (error) {
             console.error('Error fetching user balance:', error);
-            return 0.00;
+            return null;
         }
 
         return parseFloat(user.balance) || 0.00;
     } catch (error) {
         console.error('Error fetching user balance:', error);
-        return 0.00;
+        return null;
     }
 }
 
@@ -171,7 +171,8 @@ async function calculateTotalBalance() {
 
     // If portfolio sum is zero (old users or empty portfolio), use database balance as fallback
     if (portfolioSum === 0) {
-        currentBalance = await fetchUserBalance();
+        const dbBalance = await fetchUserBalance();
+        currentBalance = dbBalance !== null ? dbBalance : 0.00;
     } else {
         currentBalance = portfolioSum;
     }
@@ -240,7 +241,7 @@ refreshBtn.addEventListener('click', async () => {
 
     // Always refresh portfolio and balance from database first
     await loadUserPortfolio();
-    calculateTotalBalance();
+    await calculateTotalBalance();
     updateBalance();
 
     // Fetch live prices
@@ -273,7 +274,8 @@ refreshBtn.addEventListener('click', async () => {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
-    currentBalance = await fetchUserBalance(); // Fetch balance from database
+    const dbBalance = await fetchUserBalance(); // Fetch balance from database
+    currentBalance = dbBalance !== null ? dbBalance : 0.00;
     await loadUserPortfolio(); // Load portfolio from database
     await calculateTotalBalance(); // Calculate balance from portfolio with fallback
     updateBalance();
@@ -468,6 +470,8 @@ const setPinBtn = document.getElementById('set-pin');
 const biometricToggle = document.getElementById('biometric-toggle');
 const addTokenBtn = document.getElementById('add-token');
 const networkSettingsBtn = document.getElementById('network-settings');
+const uploadProfilePictureBtn = document.getElementById('upload-profile-picture');
+const profilePictureInput = document.getElementById('profile-picture-input');
 
 // Backup recovery phrase
 backupPhraseBtn.addEventListener('click', () => {
@@ -537,6 +541,113 @@ networkSettingsBtn.addEventListener('click', () => {
         alert('Invalid selection.');
     }
 });
+
+// Profile picture upload
+uploadProfilePictureBtn.addEventListener('click', () => {
+    profilePictureInput.click();
+});
+
+profilePictureInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB.');
+        return;
+    }
+
+    try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || !window.supabaseClient) {
+            alert('User not logged in or database not available.');
+            return;
+        }
+
+        // Upload to Supabase Storage
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${currentUser.email}_${Date.now()}.${fileExt}`;
+        const filePath = `profile-pictures/${fileName}`;
+
+        const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
+            .from('user-uploads')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error('Upload error:', uploadError);
+            alert('Failed to upload image. Please try again.');
+            return;
+        }
+
+        // Get public URL
+        const { data: urlData } = window.supabaseClient.storage
+            .from('user-uploads')
+            .getPublicUrl(filePath);
+
+        const publicUrl = urlData.publicUrl;
+
+        // Update user profile in database
+        const { error: updateError } = await window.supabaseClient
+            .from('users')
+            .update({ profile_picture: publicUrl })
+            .eq('email', currentUser.email);
+
+        if (updateError) {
+            console.error('Database update error:', updateError);
+            alert('Failed to save profile picture. Please try again.');
+            return;
+        }
+
+        // Update UI
+        updateUserAvatar(publicUrl);
+        alert('Profile picture updated successfully!');
+
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        alert('An error occurred. Please try again.');
+    }
+});
+
+// Function to update user avatar display
+function updateUserAvatar(imageUrl) {
+    const userAvatar = document.querySelector('.user-avatar');
+    if (userAvatar && imageUrl) {
+        userAvatar.innerHTML = `<img src="${imageUrl}" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+    }
+}
+
+// Load user profile picture on page load
+async function loadUserProfilePicture() {
+    try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || !window.supabaseClient) {
+            return;
+        }
+
+        const { data: user, error } = await window.supabaseClient
+            .from('users')
+            .select('profile_picture')
+            .eq('email', currentUser.email)
+            .single();
+
+        if (error) {
+            console.error('Error fetching profile picture:', error);
+            return;
+        }
+
+        if (user.profile_picture) {
+            updateUserAvatar(user.profile_picture);
+        }
+    } catch (error) {
+        console.error('Error loading profile picture:', error);
+    }
+}
 
 // ===== ACTION MODALS FUNCTIONALITY =====
 

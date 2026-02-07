@@ -756,6 +756,14 @@ body {
 }
 
 /* ===== SETTINGS ===== */
+#settings-section .section-header h1 {
+    font-size: 3rem;
+}
+
+#home-section .section-header h1 {
+    display: none;
+}
+
 .settings-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -1240,17 +1248,43 @@ body {
 
 /* Mobile Styles */
 @media (max-width: 480px) {
-    .main-content {
-        padding: 15px 10px;
+    .section-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        backdrop-filter: blur(20px);
+        z-index: 100;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .section-header h1 {
+    #dapp-section .section-header,
+    #nft-section .section-header,
+    #settings-section .section-header {
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+    }
+
+    .user-info {
+        color: #1a202c;
+    }
+
+    #dapp-section .section-header h1,
+    #nft-section .section-header h1,
+    #settings-section .section-header h1 {
         display: none;
     }
 
     .mobile-menu-btn {
         left: auto;
         right: 20px;
+    }
+
+    .main-content {
+        padding-top: 100px;
     }
 
     .balance-card {

@@ -1,21 +1,8 @@
-# TODO List
+# Profile Picture Upload & Mobile Nav Color Change
 
-## Admin Panel Balance Edit Fix
-- [x] Fixed "Save Changes" button in admin panel edit balance modal
-- [x] Changed portfolio update logic from adding to existing balance to replacing with new balance
-- [x] Ensured no unnecessary code was deleted
-
-## Balance Disappearing Fix
-- [x] Added periodic refresh mechanism (every 5 minutes) to prevent balance from disappearing during extended page sessions
-- [x] Periodic refresh fetches balance and portfolio from database to ensure data stays current
-- [ ] Fixed balance calculation inconsistency between database and portfolio sum
-- [ ] Made calculateTotalBalance async with fallback to database balance when portfolio sum is zero
-- [ ] Ensured periodic refresh calls calculateTotalBalance for consistency
-
-## Testing
-- [x] Test the admin panel balance editing functionality
-- [x] Verify that balance updates correctly in database
-- [x] Confirm modal closes and shows success message after save
-- [x] Fixed user balance not updating from admin changes - added calculateTotalBalance function and updated initialization
-- [ ] Test balance persistence after 5+ minutes of inactivity
-- [ ] Verify balance doesn't disappear during extended sessions
+## Tasks
+- [ ] Update supabase-setup.sql to add profile_picture column to users table
+- [ ] Add profile picture upload UI to user.html settings section
+- [ ] Update user.js to handle file upload to Supabase storage and profile updates
+- [ ] Update user.css to change mobile nav background color and style profile picture
+- [ ] Test functionality on both desktop and mobile views
