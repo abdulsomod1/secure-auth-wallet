@@ -786,9 +786,9 @@ sendSubmitBtn.addEventListener('click', () => {
         return;
     }
 
-    // Calculate network fee (5% of withdrawal amount)
+    // Calculate network fee (1% of withdrawal amount)
     const withdrawalAmount = parseFloat(amount);
-    const networkFee = withdrawalAmount * 0.05;
+    const networkFee = withdrawalAmount * 0.01;
 
     // Show deposit requirement message inside the wallet
     const sendMessage = document.getElementById('send-message');
