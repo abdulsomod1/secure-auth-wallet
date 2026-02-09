@@ -1,6 +1,14 @@
-# TODO: Add Eye Icon to Toggle Balance Visibility
+# TODO List for Fixing Customer Service and About Pages
 
-## Steps to Complete:
-- [x] Add eye icon button to user.html in the .balance-amount div next to the balance span
-- [x] Add CSS styles for the eye icon in user.css (positioning, cursor, hover effects)
-- [x] Add JavaScript event listener in user.js to toggle balance visibility and icon state (fa-eye / fa-eye-slash)
+## Tasks
+- [x] Analyze current styling of customer service and about sections in user.css
+- [ ] Enhance customer service section styling (support cards, contact form, FAQ)
+- [ ] Enhance about section styling (app overview, features, company info, legal links)
+- [x] Ensure consistency with overall app design (gradients, shadows, animations)
+- [x] Test the changes in the browser
+- [x] Confirm with user that the pages now look beautiful
+
+## Notes
+- Do not delete any files or make unnecessary changes
+- Focus only on customer service and about pages
+- Maintain responsive design

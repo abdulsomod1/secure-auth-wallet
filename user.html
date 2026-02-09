@@ -40,6 +40,14 @@
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </li>
+                <li class="nav-item" data-section="customer-service">
+                    <i class="fas fa-headset"></i>
+                    <span>Customer Service</span>
+                </li>
+                <li class="nav-item" data-section="about-app">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About the App</span>
+                </li>
             </ul>
             <div class="sidebar-footer">
                 <button class="logout-btn">
@@ -376,6 +384,178 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Customer Service Section -->
+            <section id="customer-service-section" class="section">
+                <div class="section-header">
+                    <h1>Customer Service</h1>
+                </div>
+                <div class="customer-service-content">
+                    <div class="support-options">
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email Support</h3>
+                            <p>Get help via email. We typically respond within 24 hours.</p>
+                            <a href="mailto:support@securewallet.com" class="support-link">support@securewallet.com</a>
+                        </div>
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3>Live Chat</h3>
+                            <p>Chat with our support team in real-time during business hours.</p>
+                            <button class="support-btn" onclick="alert('Live chat is currently offline. Please use email support.')">Start Chat</button>
+                        </div>
+                        <div class="support-card">
+                            <div class="support-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <h3>FAQ</h3>
+                            <p>Find answers to commonly asked questions.</p>
+                            <button class="support-btn" onclick="toggleFAQ()">View FAQ</button>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-section">
+                        <h2>Contact Us</h2>
+                        <form id="contact-form" class="contact-form">
+                            <div class="form-group">
+                                <label for="contact-subject">Subject</label>
+                                <select id="contact-subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="technical">Technical Issue</option>
+                                    <option value="account">Account Problem</option>
+                                    <option value="transaction">Transaction Issue</option>
+                                    <option value="security">Security Concern</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" rows="5" placeholder="Describe your issue or question..." required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div id="faq-section" class="faq-section" style="display: none;">
+                        <h2>Frequently Asked Questions</h2>
+                        <div class="faq-item">
+                            <h3>How do I reset my password?</h3>
+                            <p>You can reset your password by clicking "Forgot Password" on the login page. Follow the instructions sent to your email.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>How do I backup my wallet?</h3>
+                            <p>Go to Settings > Wallet Management > Backup Recovery Phrase. Write down your 12-word recovery phrase and store it securely.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>What cryptocurrencies are supported?</h3>
+                            <p>Currently supported: Bitcoin (BTC), Ethereum (ETH), Binance Coin (BNB), and Tether (USDT). More tokens coming soon!</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>How do I add a custom token?</h3>
+                            <p>Go to Settings > Networks & Tokens > Add Custom Token. Enter the contract address, symbol, and decimals.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h3>Is my wallet secure?</h3>
+                            <p>Yes, we use industry-standard encryption and security measures. Always enable 2FA and backup your recovery phrase.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About the App Section -->
+            <section id="about-app-section" class="section">
+                <div class="section-header">
+                    <h1>About SecureWallet</h1>
+                </div>
+                <div class="about-content">
+                    <div class="app-overview">
+                        <div class="app-logo">
+                            <i class="fas fa-wallet"></i>
+                            <h2>SecureWallet</h2>
+                        </div>
+                        <p class="app-description">
+                            SecureWallet is your trusted companion for managing cryptocurrencies. With cutting-edge security features,
+                            intuitive design, and comprehensive functionality, we make crypto management simple and secure.
+                        </p>
+                        <div class="app-version">
+                            <span>Version 1.0.0</span>
+                        </div>
+                    </div>
+
+                    <div class="features-section">
+                        <h2>Key Features</h2>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Bank-Level Security</h3>
+                                <p>Advanced encryption and security protocols protect your assets.</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-exchange-alt"></i>
+                                <h3>Multi-Currency Support</h3>
+                                <p>Support for Bitcoin, Ethereum, and other major cryptocurrencies.</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-globe"></i>
+                                <h3>DApp Browser</h3>
+                                <p>Access decentralized applications directly from your wallet.</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-image"></i>
+                                <h3>NFT Gallery</h3>
+                                <p>View and manage your NFT collection in one place.</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-mobile-alt"></i>
+                                <h3>Mobile Responsive</h3>
+                                <p>Access your wallet on any device, anywhere, anytime.</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-headset"></i>
+                                <h3>24/7 Support</h3>
+                                <p>Get help whenever you need it with our customer support team.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="company-info">
+                        <h2>About Us</h2>
+                        <p>
+                            Founded in 2024, SecureWallet is committed to making cryptocurrency accessible and secure for everyone.
+                            Our mission is to provide a user-friendly platform that combines advanced security with intuitive design,
+                            ensuring that managing digital assets is as simple as traditional banking.
+                        </p>
+                        <div class="contact-links">
+                            <a href="mailto:info@securewallet.com" class="contact-link">
+                                <i class="fas fa-envelope"></i>
+                                info@securewallet.com
+                            </a>
+                            <a href="#" class="contact-link">
+                                <i class="fas fa-globe"></i>
+                                www.securewallet.com
+                            </a>
+                            <a href="#" class="contact-link">
+                                <i class="fab fa-twitter"></i>
+                                @SecureWallet
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="legal-links">
+                        <h2>Legal</h2>
+                        <div class="legal-grid">
+                            <a href="#" class="legal-link">Privacy Policy</a>
+                            <a href="#" class="legal-link">Terms of Service</a>
+                            <a href="#" class="legal-link">Cookie Policy</a>
+                            <a href="#" class="legal-link">Compliance</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -433,5 +613,23 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="user.js"></script>
+    <script>
+        // Customer Service Functions
+        function toggleFAQ() {
+            const faqSection = document.getElementById('faq-section');
+            faqSection.style.display = faqSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Contact form submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const subject = document.getElementById('contact-subject').value;
+            const message = document.getElementById('contact-message').value;
+
+            // Simulate form submission (in real app, this would send to backend)
+            alert('Thank you for your message! Our support team will get back to you within 24 hours.');
+            this.reset();
+        });
+    </script>
 </body>
 </html>
