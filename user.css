@@ -1774,6 +1774,16 @@ body {
         color: #1a202c;
     }
 
+    #dapp-section .section-header,
+    #nft-section .section-header,
+    #settings-section .section-header {
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
+        box-shadow: none;
+        margin-bottom: 30px;
+    }
+
     #dapp-section .section-header h1,
     #nft-section .section-header h1,
     #settings-section .section-header h1,
