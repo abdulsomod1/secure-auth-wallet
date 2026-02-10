@@ -21,6 +21,12 @@ navItems.forEach(item => {
         if (targetSection) {
             targetSection.classList.add('active');
         }
+
+        // Close sidebar on mobile when menu option is clicked
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+        }
     });
 });
 
