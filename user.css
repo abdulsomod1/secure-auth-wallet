@@ -554,6 +554,15 @@ body {
 }
 
 /* ===== DAPP BROWSER ===== */
+#dapp-section .section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 .browser-controls {
     display: flex;
     gap: 12px;
@@ -772,6 +781,15 @@ body {
 }
 
 /* ===== CUSTOMER SERVICE ===== */
+#customer-service-section .section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 .customer-service-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1011,6 +1029,15 @@ body {
 }
 
 /* ===== ABOUT APP ===== */
+#about-app-section .section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 .about-content {
     display: grid;
     gap: 40px;
@@ -1250,6 +1277,15 @@ body {
 }
 
 /* ===== SETTINGS ===== */
+#settings-section .section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 #settings-section .section-header h1 {
     font-size: 3rem;
 }
