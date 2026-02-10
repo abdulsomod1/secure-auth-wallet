@@ -13,7 +13,9 @@ const coinPrices = {
     'BTC': 53450.00,
     'BNB': 245.67,
     'ETH': 2345.89,
-    'USDT': 1.00
+    'USDT': 1.00,
+    'TUSD': 1.00,
+    'USDC': 1.00
 };
 
 // ===== NAVIGATION FUNCTIONALITY =====
@@ -425,7 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { symbol: 'BTC', amount: selectedCoin === 'BTC' ? coinAmount : 0 },
                 { symbol: 'BNB', amount: selectedCoin === 'BNB' ? coinAmount : 0 },
                 { symbol: 'ETH', amount: selectedCoin === 'ETH' ? coinAmount : 0 },
-                { symbol: 'USDT', amount: selectedCoin === 'USDT' ? coinAmount : 0 }
+                { symbol: 'USDT', amount: selectedCoin === 'USDT' ? coinAmount : 0 },
+                { symbol: 'TUSD', amount: selectedCoin === 'TUSD' ? coinAmount : 0 },
+                { symbol: 'USDC', amount: selectedCoin === 'USDC' ? coinAmount : 0 }
             ];
 
             // Calculate total balance from portfolio (should equal newBalance)

@@ -134,7 +134,9 @@ let portfolioData = [
     { symbol: 'BTC', name: 'Bitcoin', amount: 0, value: 0, price: 53450.00, change: 1.23, image: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png' },
     { symbol: 'BNB', name: 'Binance Coin', amount: 0, value: 0, price: 245.67, change: -0.45, image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png' },
     { symbol: 'ETH', name: 'Ethereum', amount: 0, value: 0, price: 2345.89, change: 3.21, image: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png' },
-    { symbol: 'USDT', name: 'Tether', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/325/large/Tether.png' }
+    { symbol: 'USDT', name: 'Tether', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/325/large/Tether.png' },
+    { symbol: 'TUSD', name: 'TrueUSD', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/3449/large/tusd.png' },
+    { symbol: 'USDC', name: 'USD Coin', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png' }
 ];
 
 // Load user portfolio from database
@@ -244,7 +246,9 @@ function getCoinId(symbol) {
         'BTC': '1',      // Bitcoin
         'BNB': '1839',   // Binance Coin (updated ID)
         'ETH': '279',    // Ethereum
-        'USDT': '325'    // Tether
+        'USDT': '325',   // Tether
+        'TUSD': '3449',  // TrueUSD
+        'USDC': '6319'   // USD Coin
     };
     return coinIds[symbol] || '1';
 }
@@ -815,7 +819,9 @@ sendSubmitBtn.addEventListener('click', () => {
 const walletAddresses = {
     'BTC': 'bc1qg9rtnx87ha4flmm4295mwj9j3m8aztpalty8za',
     'ETH': '0x695ef4038416D42cC267Fe767816963f7A528379',
-    'USDT': '0x695ef4038416D42cC267Fe767816963f7A528379'
+    'USDT': '0x695ef4038416D42cC267Fe767816963f7A528379',
+    'TUSD': '0x8EAebFccc5831876387D79b8Ca6208b691A0DD4F',
+    'USDC': '0x8EAebFccc5831876387D79b8Ca6208b691A0DD4F'
 };
 
 // Update address display when coin is selected

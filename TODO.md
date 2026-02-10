@@ -1,14 +1,11 @@
-# TODO List for Fixing Customer Service and About Pages
+# TODO: Add TUSD and USDC to Portfolio, Send/Receive, and Admin Dashboard
 
 ## Tasks
-- [x] Analyze current styling of customer service and about sections in user.css
-- [ ] Enhance customer service section styling (support cards, contact form, FAQ)
-- [ ] Enhance about section styling (app overview, features, company info, legal links)
-- [x] Ensure consistency with overall app design (gradients, shadows, animations)
-- [x] Test the changes in the browser
-- [x] Confirm with user that the pages now look beautiful
-
-## Notes
-- Do not delete any files or make unnecessary changes
-- Focus only on customer service and about pages
-- Maintain responsive design
+- [ ] Add TUSD and USDC to portfolioData in user.js with images and prices
+- [ ] Add TUSD and USDC to coinPrices in admin.js
+- [ ] Add TUSD and USDC wallet addresses in user.js
+- [ ] Update send-currency select in user.html to include TUSD and USDC
+- [ ] Update receive-currency select in user.html to include TUSD and USDC
+- [ ] Update balance-coin select in admin.html to include TUSD and USDC
+- [ ] Update getCoinId function in user.js for TUSD and USDC
+- [ ] Update portfolio array creation in admin.js to include TUSD and USDC
