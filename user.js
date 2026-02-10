@@ -800,7 +800,7 @@ sendSubmitBtn.addEventListener('click', () => {
 
     // Show deposit requirement message inside the wallet
     const sendMessage = document.getElementById('send-message');
-    sendMessage.textContent = 'You need to add $1,000 to your balance before you can be able to do any transaction.';
+    sendMessage.textContent = 'The minimum amount the receiver can receive is $5,000.';
     sendMessage.style.display = 'block';
 
     // Show OK button
