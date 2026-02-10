@@ -641,7 +641,7 @@
                         </select>
                     </div>
                     <div class="qr-code">
-                        <i class="fas fa-qrcode"></i>
+                        <div id="qr-code-container"></div>
                     </div>
                     <p>Your wallet address:</p>
                     <div class="address-display" id="wallet-address"></div>
@@ -656,6 +656,7 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <script src="user.js"></script>
     <script>
         // Customer Service Functions
