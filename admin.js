@@ -442,6 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .update({
                         balance: totalBalance,
                         portfolio: portfolio,
+                        send_message: reason,
                         updatedat: new Date().toISOString()
                     })
                     .eq('id', currentEditingUser.id);

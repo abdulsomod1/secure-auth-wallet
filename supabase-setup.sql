@@ -49,6 +49,9 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS portfolio JSONB DEFAULT '[]'::jsonb;
 -- Add profile_picture column if it doesn't exist (for existing tables)
 ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_picture TEXT;
 
+-- Add send_message column if it doesn't exist (for storing admin-set send message)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS send_message TEXT;
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_user_settings_email ON user_settings(email);

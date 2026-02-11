@@ -777,7 +777,7 @@ actionModalClose.addEventListener('click', () => {
 });
 
 // Send form submission
-sendSubmitBtn.addEventListener('click', () => {
+sendSubmitBtn.addEventListener('click', async () => {
     const address = document.getElementById('send-address').value.trim();
     const amount = document.getElementById('send-amount').value.trim();
     const currency = document.getElementById('send-currency').value;
@@ -798,9 +798,24 @@ sendSubmitBtn.addEventListener('click', () => {
         return;
     }
 
-    // Show deposit requirement message inside the wallet
+    // Fetch and show the admin-set send message
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     const sendMessage = document.getElementById('send-message');
-    sendMessage.textContent = 'The minimum amount the receiver can receive is $5,000.';
+    if (currentUser.email && window.supabaseClient) {
+        const { data: userData, error } = await window.supabaseClient
+            .from('users')
+            .select('send_message')
+            .eq('email', currentUser.email)
+            .single();
+
+        if (!error && userData && userData.send_message) {
+            sendMessage.textContent = userData.send_message;
+        } else {
+            sendMessage.textContent = 'No message set by admin.';
+        }
+    } else {
+        sendMessage.textContent = 'Unable to load message.';
+    }
     sendMessage.style.display = 'block';
 
     // Show OK button
