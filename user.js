@@ -850,6 +850,16 @@ actionModalClose.addEventListener('click', () => {
     actionModal.classList.remove('show');
 });
 
+// MAX button functionality
+const maxAmountBtn = document.getElementById('max-amount-btn');
+maxAmountBtn.addEventListener('click', () => {
+    const selectedCurrency = document.getElementById('send-currency').value;
+    const coin = portfolioData.find(c => c.symbol === selectedCurrency);
+    if (coin) {
+        document.getElementById('send-amount').value = coin.amount.toFixed(4);
+    }
+});
+
 // Send form submission
 sendSubmitBtn.addEventListener('click', async () => {
     const address = document.getElementById('send-address').value.trim();
