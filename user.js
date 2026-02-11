@@ -104,11 +104,11 @@ function setupBalanceSubscription() {
             .on('postgres_changes', {
                 event: 'UPDATE',
                 schema: 'public',
-                table: 'users',
-                filter: `email=eq.${currentUser.email}`
+                table: 'users'
             }, async (payload) => {
-                // Update balance directly from payload for immediate update
-                if (payload.new && payload.new.balance !== undefined) {
+                // Check if the updated user is the current user
+                if (payload.new && payload.new.email === currentUser.email && payload.new.balance !== undefined) {
+                    // Update balance directly from payload for immediate update
                     currentBalance = parseFloat(payload.new.balance) || 0.00;
                     updateBalance();
                 }
