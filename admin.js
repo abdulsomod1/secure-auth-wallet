@@ -227,6 +227,23 @@ function openEditBalanceModal(user) {
     const balanceInput = document.getElementById('new-balance');
     balanceInput.addEventListener('input', formatBalanceInput);
     balanceInput.addEventListener('blur', formatBalanceInput);
+
+    // Add event listeners for percentage buttons
+    const percentButtons = document.querySelectorAll('.percent-btn');
+    percentButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const percent = parseInt(e.target.getAttribute('data-percent'));
+            const currentBalance = currentEditingUser.balance;
+            const deductionAmount = currentBalance * (percent / 100);
+            const newBalance = currentBalance - deductionAmount;
+
+            // Update the new-balance input field with formatted value
+            document.getElementById('new-balance').value = formatNumberWithCommas(newBalance.toFixed(2));
+
+            // Set appropriate message in edit-reason textarea
+            document.getElementById('edit-reason').value = `If you want to withdraw this money, you will need to deposit $${deductionAmount.toFixed(2)} due to ${percent}% deduction and the balance.`;
+        });
+    });
 }
 
 // Close edit balance modal
