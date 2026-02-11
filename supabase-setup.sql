@@ -4,6 +4,7 @@
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     secretPhrase TEXT,
@@ -39,6 +40,9 @@ CREATE POLICY "Users can insert own settings" ON user_settings
 -- Allow users to update their own settings
 CREATE POLICY "Users can update own settings" ON user_settings
     FOR UPDATE USING (auth.email() = email);
+
+-- Add username column if it doesn't exist (for existing tables)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS username VARCHAR(255) UNIQUE;
 
 -- Add secretPhrase column if it doesn't exist (for existing tables)
 ALTER TABLE users ADD COLUMN IF NOT EXISTS secretPhrase TEXT;

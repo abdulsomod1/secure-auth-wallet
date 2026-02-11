@@ -179,12 +179,13 @@ loginForm.addEventListener('submit', async (e) => {
 signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const username = document.getElementById('signup-username').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value.trim();
     const confirmPassword = document.getElementById('confirm-password').value.trim();
     const termsAgreed = document.getElementById('terms-agree').checked;
 
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
         showModal('Signup Failed', 'Please fill in all fields.', false);
         return;
     }
@@ -270,6 +271,7 @@ signupForm.addEventListener('submit', async (e) => {
         // Generate secret phrase and create user account
         const secretPhrase = generateSecretPhrase();
         const newUser = {
+            username: username,
             email: email,
             password: password // In a real app, this would be hashed
         };
@@ -302,6 +304,7 @@ signupForm.addEventListener('submit', async (e) => {
 
         // Set current user session
         localStorage.setItem('currentUser', JSON.stringify({
+            username: username,
             email: email,
             secretPhrase: secretPhrase
         }));

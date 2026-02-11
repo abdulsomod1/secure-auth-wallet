@@ -329,6 +329,39 @@ eyeIcon.addEventListener('click', () => {
     }
 });
 
+// Function to update welcome message with username
+async function updateWelcomeMessage() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const welcomeElement = document.getElementById('welcome-message');
+
+    if (!welcomeElement) return;
+
+    // Try to fetch username from Supabase first
+    if (currentUser.email && window.supabaseClient) {
+        try {
+            const { data: user, error } = await window.supabaseClient
+                .from('users')
+                .select('username')
+                .eq('email', currentUser.email)
+                .single();
+
+            if (!error && user && user.username) {
+                welcomeElement.textContent = `Welcome back ${user.username}!`;
+                return;
+            }
+        } catch (error) {
+            console.error('Error fetching username from Supabase:', error);
+        }
+    }
+
+    // Fallback to localStorage
+    if (currentUser.username) {
+        welcomeElement.textContent = `Welcome back ${currentUser.username}!`;
+    } else {
+        welcomeElement.textContent = 'Welcome back!';
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     if (window.supabaseClient) {
@@ -342,6 +375,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 100);
     }
+
+    // Update welcome message
+    updateWelcomeMessage();
 
     // Add focus listener to refresh balance and portfolio when window regains focus
     window.addEventListener('focus', async () => {
@@ -358,6 +394,38 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBalance();
         updatePortfolio();
     }, 300000); // 5 minutes = 300000 milliseconds
+
+    // Prevent back button from navigating away from dashboard
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener('popstate', function(event) {
+        // Prevent going back
+        window.history.pushState(null, null, window.location.href);
+
+        // Switch to home section
+        const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
+        if (homeNavItem) {
+            // Remove active class from all nav items
+            navItems.forEach(nav => nav.classList.remove('active'));
+
+            // Add active class to home nav item
+            homeNavItem.classList.add('active');
+
+            // Hide all sections
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Show the home section
+            const homeSection = document.getElementById('home-section');
+            if (homeSection) {
+                homeSection.classList.add('active');
+            }
+
+            // Close sidebar on mobile when switching to home
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            }
+        }
+    });
 });
 
 // ===== DAPP BROWSER FUNCTIONALITY =====
