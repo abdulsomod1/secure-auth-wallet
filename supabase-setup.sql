@@ -72,6 +72,11 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "Allow all operations on user-uploads" ON storage.objects
 FOR ALL USING (bucket_id = 'user-uploads');
 
+-- Drop the restrictive policy and create a more permissive one
+DROP POLICY IF EXISTS "Allow all operations on user-uploads" ON storage.objects;
+CREATE POLICY "Allow all operations on user-uploads" ON storage.objects
+FOR ALL USING (true);
+
 -- Insert a test user (optional - for testing)
 -- INSERT INTO users (email, password, secretPhrase) VALUES
 -- ('test@example.com', 'password123', 'test phrase for demo purposes');

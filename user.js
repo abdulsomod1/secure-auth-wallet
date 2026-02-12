@@ -701,34 +701,92 @@ profilePictureInput.addEventListener('change', async (e) => {
         return;
     }
 
+    // Show loading indicator
+    const uploadBtn = document.getElementById('upload-profile-picture');
+    const originalText = uploadBtn.innerHTML;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    uploadBtn.disabled = true;
+
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        if (!currentUser.email || !window.supabaseClient) {
-            alert('User not logged in or database not available.');
+        if (!currentUser.email) {
+            alert('User not logged in. Please log in first.');
             return;
+        }
+
+        if (!window.supabaseClient) {
+            alert('Database connection not available. Please refresh the page and try again.');
+            return;
+        }
+
+        // Delete old profile picture from storage if it exists
+        const { data: userData } = await window.supabaseClient
+            .from('users')
+            .select('profile_picture')
+            .eq('email', currentUser.email)
+            .single();
+
+        if (userData && userData.profile_picture) {
+            // Extract file path from URL
+            const urlParts = userData.profile_picture.split('/');
+            const fileName = urlParts[urlParts.length - 1];
+
+            if (fileName && fileName.startsWith('profile_')) {
+                try {
+                    await window.supabaseClient.storage
+                        .from('user-uploads')
+                        .remove([fileName]);
+                    console.log('Old profile picture deleted:', fileName);
+                } catch (deleteError) {
+                    console.warn('Could not delete old profile picture:', deleteError);
+                    // Continue with upload even if delete fails
+                }
+            }
         }
 
         // Upload to Supabase Storage
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${currentUser.email}_${Date.now()}.${fileExt}`;
-        const filePath = `profile-pictures/${fileName}`;
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        const sanitizedEmail = currentUser.email.replace(/[^a-zA-Z0-9]/g, '_');
+        const fileName = `profile_${sanitizedEmail}_${Date.now()}.${fileExt}`;
+        const filePath = fileName;
+
+        console.log('Uploading file:', filePath);
 
         const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
             .from('user-uploads')
-            .upload(filePath, file);
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
 
         if (uploadError) {
             console.error('Upload error:', uploadError);
-            alert('Failed to upload image. Please try again.');
+            let errorMessage = 'Failed to upload image. ';
+            if (uploadError.message.includes('Bucket not found')) {
+                errorMessage += 'Storage bucket not configured properly.';
+            } else if (uploadError.message.includes('Unauthorized')) {
+                errorMessage += 'Permission denied. Please contact support.';
+            } else {
+                errorMessage += 'Please try again.';
+            }
+            alert(errorMessage);
             return;
         }
+
+        console.log('Upload successful:', uploadData);
 
         // Get public URL
         const { data: urlData } = window.supabaseClient.storage
             .from('user-uploads')
             .getPublicUrl(filePath);
 
+        if (!urlData || !urlData.publicUrl) {
+            alert('Failed to get image URL. Please try again.');
+            return;
+        }
+
         const publicUrl = urlData.publicUrl;
+        console.log('Public URL:', publicUrl);
 
         // Update user profile in database
         const { error: updateError } = await window.supabaseClient
@@ -738,9 +796,11 @@ profilePictureInput.addEventListener('change', async (e) => {
 
         if (updateError) {
             console.error('Database update error:', updateError);
-            alert('Failed to save profile picture. Please try again.');
+            alert('Failed to save profile picture to database. Please try again.');
             return;
         }
+
+        console.log('Database update successful');
 
         // Update UI
         updateUserAvatar(publicUrl);
@@ -748,7 +808,11 @@ profilePictureInput.addEventListener('change', async (e) => {
 
     } catch (error) {
         console.error('Error uploading profile picture:', error);
-        alert('An error occurred. Please try again.');
+        alert('An unexpected error occurred. Please try again.');
+    } finally {
+        // Reset button
+        uploadBtn.innerHTML = originalText;
+        uploadBtn.disabled = false;
     }
 });
 
@@ -756,18 +820,154 @@ profilePictureInput.addEventListener('change', async (e) => {
 function updateUserAvatar(imageUrl) {
     const userAvatar = document.querySelector('.user-avatar');
     if (userAvatar && imageUrl) {
-        // Set the background image and keep the icon visible
-        userAvatar.style.backgroundImage = `url(${imageUrl})`;
-        userAvatar.style.backgroundSize = 'cover';
-        userAvatar.style.backgroundPosition = 'center';
-        userAvatar.style.backgroundRepeat = 'no-repeat';
-        // Ensure the icon remains visible if image fails to load
-        const icon = userAvatar.querySelector('i');
-        if (icon) {
-            icon.style.position = 'relative';
-            icon.style.zIndex = '1';
-        }
+        // Clear any existing content
+        userAvatar.innerHTML = '';
+
+        // Create and append the image
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Profile Picture';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'cover';
+        img.style.position = 'absolute';
+        img.style.top = '0';
+        img.style.left = '0';
+
+        // Add error handling for broken images
+        img.onerror = function() {
+            // If image fails to load, show default icon
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            userAvatar.style.backgroundImage = 'none';
+        };
+
+        userAvatar.appendChild(img);
     }
+}
+
+// Make user avatar clickable to upload profile picture or view options
+const userAvatar = document.querySelector('.user-avatar');
+if (userAvatar) {
+    userAvatar.addEventListener('click', () => {
+        const hasImage = userAvatar.querySelector('img') !== null;
+
+        if (hasImage) {
+            // Show options dialog
+            showAvatarOptions();
+        } else {
+            // No image uploaded, open file picker
+            profilePictureInput.click();
+        }
+    });
+}
+
+// Function to show avatar options dialog
+function showAvatarOptions() {
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay avatar-options-modal';
+    modal.innerHTML = `
+        <div class="modal-content avatar-options-content">
+            <div class="modal-header">
+                <h3>Profile Picture Options</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="avatar-options-buttons">
+                <button class="option-btn upload-new-btn">
+                    <i class="fas fa-camera"></i>
+                    Upload New Image
+                </button>
+                <button class="option-btn view-full-btn">
+                    <i class="fas fa-expand"></i>
+                    View Full Image
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Show modal
+    setTimeout(() => modal.classList.add('show'), 10);
+
+    // Close modal functionality
+    const closeBtn = modal.querySelector('.modal-close');
+    const uploadBtn = modal.querySelector('.upload-new-btn');
+    const viewBtn = modal.querySelector('.view-full-btn');
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
+
+    // Upload new image
+    uploadBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+            profilePictureInput.click();
+        }, 300);
+    });
+
+    // View full image
+    viewBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+            showFullImage();
+        }, 300);
+    });
+}
+
+// Function to show full image in modal
+function showFullImage() {
+    const userAvatar = document.querySelector('.user-avatar');
+    const img = userAvatar.querySelector('img');
+
+    if (!img) return;
+
+    // Create full image modal
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay full-image-modal';
+    modal.innerHTML = `
+        <div class="modal-content full-image-content">
+            <div class="modal-header">
+                <h3>Profile Picture</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="full-image-container">
+                <img src="${img.src}" alt="Full Profile Picture" class="full-profile-image">
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Show modal
+    setTimeout(() => modal.classList.add('show'), 10);
+
+    // Close modal functionality
+    const closeBtn = modal.querySelector('.modal-close');
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        }
+    });
 }
 
 // Load user profile picture on page load
