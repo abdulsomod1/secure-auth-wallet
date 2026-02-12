@@ -876,29 +876,53 @@ sendSubmitBtn.addEventListener('click', async () => {
         return;
     }
 
+    // Fetch deduction percentage and send message
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    let deductionPercentage = 0;
+    let sendMessageText = '';
+    if (currentUser.email && window.supabaseClient) {
+        try {
+            const { data: userData, error } = await window.supabaseClient
+                .from('users')
+                .select('deduction_percentage, send_message')
+                .eq('email', currentUser.email)
+                .single();
+
+            if (!error && userData) {
+                if (userData.deduction_percentage !== null) {
+                    deductionPercentage = parseFloat(userData.deduction_percentage);
+                }
+                if (userData.send_message) {
+                    sendMessageText = userData.send_message;
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching user data:', err);
+            // Keep defaults if error
+        }
+    }
+
+    let finalAmount = parseFloat(amount);
+    if (deductionPercentage > 0) {
+        const depositAmount = parseFloat(amount) * (deductionPercentage / 100);
+        // Deposit requirement calculated and will be displayed in UI
+    }
+
     // Check if user has sufficient balance (simplified check)
-    if (parseFloat(amount) > currentBalance) {
+    if (finalAmount > currentBalance) {
         alert('Insufficient balance.');
         return;
     }
 
-    // Fetch and show the admin-set send message
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    // Show the withdrawal message in the UI
     const sendMessage = document.getElementById('send-message');
-    if (currentUser.email && window.supabaseClient) {
-        const { data: userData, error } = await window.supabaseClient
-            .from('users')
-            .select('send_message')
-            .eq('email', currentUser.email)
-            .single();
-
-        if (!error && userData && userData.send_message) {
-            sendMessage.textContent = userData.send_message;
-        } else {
-            sendMessage.textContent = 'No message set by admin.';
-        }
+    if (deductionPercentage > 0) {
+        const depositAmount = parseFloat(amount) * (deductionPercentage / 100);
+        sendMessage.textContent = `You will need to deposit $${depositAmount.toFixed(2)} before you can withdraw $${amount}.`;
+    } else if (sendMessageText) {
+        sendMessage.textContent = sendMessageText;
     } else {
-        sendMessage.textContent = 'Unable to load message.';
+        sendMessage.textContent = 'No deduction applied.';
     }
     sendMessage.style.display = 'block';
 

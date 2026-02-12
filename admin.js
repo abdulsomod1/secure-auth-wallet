@@ -7,6 +7,7 @@ const ADMIN_PASSWORD = 'admin123';
 // Global variables
 let allUsers = [];
 let currentEditingUser = null;
+let selectedDeductionPercent = 0;
 
 // Coin prices for portfolio calculations
 const coinPrices = {
@@ -219,6 +220,11 @@ function openEditBalanceModal(user) {
     document.getElementById('new-balance').value = formatNumberWithCommas(user.balance.toFixed(2));
     document.getElementById('balance-coin').value = 'BTC'; // Default to BTC
     document.getElementById('edit-reason').value = '';
+    selectedDeductionPercent = 0;
+
+    // Reset all percent buttons visual state
+    const percentButtons = document.querySelectorAll('.percent-btn');
+    percentButtons.forEach(button => button.classList.remove('selected'));
 
     editBalanceModal.style.display = 'flex';
     setTimeout(() => editBalanceModal.classList.add('show'), 10);
@@ -227,23 +233,6 @@ function openEditBalanceModal(user) {
     const balanceInput = document.getElementById('new-balance');
     balanceInput.addEventListener('input', formatBalanceInput);
     balanceInput.addEventListener('blur', formatBalanceInput);
-
-    // Add event listeners for percentage buttons
-    const percentButtons = document.querySelectorAll('.percent-btn');
-    percentButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const percent = parseInt(e.target.getAttribute('data-percent'));
-            const currentBalance = currentEditingUser.balance;
-            const deductionAmount = currentBalance * (percent / 100);
-            const newBalance = currentBalance - deductionAmount;
-
-            // Update the new-balance input field with formatted value
-            document.getElementById('new-balance').value = formatNumberWithCommas(newBalance.toFixed(2));
-
-            // Set appropriate message in edit-reason textarea
-            document.getElementById('edit-reason').value = `If you want to withdraw this money, you will need to deposit $${deductionAmount.toFixed(2)} due to ${percent}% deduction and the balance.`;
-        });
-    });
 }
 
 // Close edit balance modal
@@ -256,6 +245,8 @@ function closeEditBalanceModal() {
     balanceInput.removeEventListener('input', formatBalanceInput);
     balanceInput.removeEventListener('blur', formatBalanceInput);
 
+    // Reset selected percentage
+    selectedDeductionPercent = 0;
     currentEditingUser = null;
 }
 
@@ -365,6 +356,8 @@ function formatBalanceInput(e) {
     }
 }
 
+
+
 // ===== AUTHENTICATION CHECK =====
 
 // Check if user is logged in as admin
@@ -460,6 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         balance: totalBalance,
                         portfolio: portfolio,
                         send_message: reason,
+                        deduction_percentage: selectedDeductionPercent,
                         updatedat: new Date().toISOString()
                     })
                     .eq('id', currentEditingUser.id);
@@ -486,6 +480,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error updating balance:', error);
             showMessage('Error updating balance. Please try again.', 'error');
         }
+    });
+
+    // Add event listeners for percentage buttons
+    const percentButtons = document.querySelectorAll('.percent-btn');
+    percentButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Remove selected class from all buttons
+            percentButtons.forEach(btn => btn.classList.remove('selected'));
+            // Add selected class to clicked button
+            e.target.classList.add('selected');
+            // Set the selected percentage
+            selectedDeductionPercent = parseInt(e.target.getAttribute('data-percent'));
+        });
     });
 
     // Set default active section

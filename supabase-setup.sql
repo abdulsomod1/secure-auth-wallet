@@ -56,6 +56,9 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_picture TEXT;
 -- Add send_message column if it doesn't exist (for storing admin-set send message)
 ALTER TABLE users ADD COLUMN IF NOT EXISTS send_message TEXT;
 
+-- Add deduction_percentage column if it doesn't exist (for storing deduction percentage for withdrawals)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deduction_percentage DECIMAL(5,2) DEFAULT 0.00;
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_user_settings_email ON user_settings(email);
