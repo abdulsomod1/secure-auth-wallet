@@ -364,6 +364,8 @@ async function updateWelcomeMessage() {
 
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
+        // Disable scroll restoration to ensure page always starts at top
+        history.scrollRestoration = 'manual';
         // Scroll to top on page load
         window.scrollTo(0, 0);
 
