@@ -867,7 +867,7 @@ maxAmountBtn.addEventListener('click', () => {
     const selectedCurrency = document.getElementById('send-currency').value;
     const coin = portfolioData.find(c => c.symbol === selectedCurrency);
     if (coin) {
-        document.getElementById('send-amount').value = coin.amount.toFixed(4);
+        document.getElementById('send-amount').value = coin.value.toFixed(2);
     }
 });
 
