@@ -362,22 +362,25 @@ async function updateWelcomeMessage() {
     }
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.supabaseClient) {
-        initializeUserData();
-    } else {
-        // Wait for Supabase client to be initialized
-        const checkSupabase = setInterval(() => {
-            if (window.supabaseClient) {
-                clearInterval(checkSupabase);
-                initializeUserData();
-            }
-        }, 100);
-    }
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Scroll to top on page load
+        window.scrollTo(0, 0);
 
-    // Update welcome message
-    updateWelcomeMessage();
+        if (window.supabaseClient) {
+            initializeUserData();
+        } else {
+            // Wait for Supabase client to be initialized
+            const checkSupabase = setInterval(() => {
+                if (window.supabaseClient) {
+                    clearInterval(checkSupabase);
+                    initializeUserData();
+                }
+            }, 100);
+        }
+
+        // Update welcome message
+        updateWelcomeMessage();
 
     // Add focus listener to refresh balance and portfolio when window regains focus
     window.addEventListener('focus', async () => {
