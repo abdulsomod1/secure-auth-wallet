@@ -346,7 +346,7 @@ async function updateWelcomeMessage() {
                 .single();
 
             if (!error && user && user.username) {
-                welcomeElement.textContent = `Welcome back ${user.username}!`;
+                welcomeElement.textContent = user.username;
                 return;
             }
         } catch (error) {
@@ -356,9 +356,9 @@ async function updateWelcomeMessage() {
 
     // Fallback to localStorage
     if (currentUser.username) {
-        welcomeElement.textContent = `Welcome back ${currentUser.username}!`;
+        welcomeElement.textContent = currentUser.username;
     } else {
-        welcomeElement.textContent = 'Welcome back!';
+        welcomeElement.textContent = '';
     }
 }
 
