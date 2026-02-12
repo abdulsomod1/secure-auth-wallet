@@ -401,6 +401,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Prevent going back
         window.history.pushState(null, null, window.location.href);
 
+        // First, check if action modal is open, close it
+        if (actionModal && actionModal.classList.contains('show')) {
+            actionModal.classList.remove('show');
+            return;
+        }
+
         // Switch to home section
         const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
         if (homeNavItem) {
