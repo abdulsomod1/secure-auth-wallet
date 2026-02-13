@@ -68,10 +68,10 @@ function generateSecretPhrase() {
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('login-email').value.trim();
+    const emailOrUsername = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
 
-    if (!email || !password) {
+    if (!emailOrUsername || !password) {
         showModal('Login Failed', 'Please fill in all fields.', false);
         return;
     }
@@ -80,17 +80,18 @@ loginForm.addEventListener('submit', async (e) => {
         // Check if Supabase client is available
         if (!window.supabaseClient) {
             console.warn('Supabase client not available, falling back to localStorage');
-            // Fallback to localStorage
+            // Fallback to localStorage - check both email and username
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = users.find(u => (u.email === emailOrUsername || u.username === emailOrUsername) && u.password === password);
 
             if (!user) {
-                showModal('Login Failed', 'Invalid email or password.', false);
+                showModal('Login Failed', 'Invalid email/username or password.', false);
                 return;
             }
 
             localStorage.setItem('currentUser', JSON.stringify({
                 email: user.email,
+                username: user.username,
                 secretPhrase: user.secretPhrase
             }));
 
@@ -103,10 +104,10 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         // Check if this is admin login
-        if (email === 'admin@example.com' && password === 'admin123') {
+        if (emailOrUsername === 'admin@example.com' && password === 'admin123') {
             // Admin login - redirect to admin panel
             localStorage.setItem('currentUser', JSON.stringify({
-                email: email,
+                email: emailOrUsername,
                 secretPhrase: 'admin recovery phrase for secure wallet system'
             }));
 
@@ -118,11 +119,11 @@ loginForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        // Authenticate regular user from Supabase
+        // Authenticate regular user from Supabase - check both username and email
         const { data: users, error } = await window.supabaseClient
             .from('users')
             .select('*')
-            .eq('email', email)
+            .or(`email.eq.${emailOrUsername},username.eq.${emailOrUsername}`)
             .eq('password', password);
 
         if (error) {
@@ -132,7 +133,7 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         if (!users || users.length === 0) {
-            showModal('Login Failed', 'Invalid email or password.', false);
+            showModal('Login Failed', 'Invalid email/username or password.', false);
             return;
         }
 
@@ -141,6 +142,7 @@ loginForm.addEventListener('submit', async (e) => {
         // Set current user session
         localStorage.setItem('currentUser', JSON.stringify({
             email: user.email,
+            username: user.username,
             secretPhrase: user.secretPhrase
         }));
 
@@ -154,17 +156,18 @@ loginForm.addEventListener('submit', async (e) => {
         };
     } catch (err) {
         console.error('Login error:', err);
-        // Fallback to localStorage if Supabase fails
+        // Fallback to localStorage if Supabase fails - check both email and username
         const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
+        const user = users.find(u => (u.email === emailOrUsername || u.username === emailOrUsername) && u.password === password);
 
         if (!user) {
-            showModal('Login Failed', 'Invalid email or password.', false);
+            showModal('Login Failed', 'Invalid email/username or password.', false);
             return;
         }
 
         localStorage.setItem('currentUser', JSON.stringify({
             email: user.email,
+            username: user.username,
             secretPhrase: user.secretPhrase
         }));
 
@@ -199,8 +202,6 @@ signupForm.addEventListener('submit', async (e) => {
         showModal('Signup Failed', 'Please agree to the Terms of Service and Privacy Policy.', false);
         return;
     }
-
-
 
     try {
         // Check if Supabase client is available
