@@ -209,16 +209,17 @@ signupForm.addEventListener('submit', async (e) => {
             console.warn('Supabase client not available, falling back to localStorage');
             // Fallback to localStorage
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const existingUser = users.find(u => u.email === email);
+            const existingUser = users.find(u => u.email === email || u.username === username);
 
             if (existingUser) {
-                showModal('Signup Failed', 'An account with this email already exists.', false);
+                showModal('Signup Failed', 'An account with this email or username already exists.', false);
                 return;
             }
 
             // Generate secret phrase and create user account
             const secretPhrase = generateSecretPhrase();
             const newUser = {
+                username: username,
                 email: email,
                 password: password,
                 secretPhrase: secretPhrase,
@@ -231,6 +232,7 @@ signupForm.addEventListener('submit', async (e) => {
 
             // Set current user session
             localStorage.setItem('currentUser', JSON.stringify({
+                username: username,
                 email: email,
                 secretPhrase: secretPhrase
             }));
