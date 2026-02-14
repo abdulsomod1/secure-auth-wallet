@@ -120,24 +120,52 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         // Authenticate regular user from Supabase - check both username and email
-        const { data: users, error } = await window.supabaseClient
+        // First try to find user by username, then by email (more reliable than .or())
+        let user = null;
+        let searchError = null;
+        
+        // Try finding by username first
+        const { data: usersByUsername, error: usernameError } = await window.supabaseClient
             .from('users')
             .select('*')
-            .or(`email.eq.${emailOrUsername},username.eq.${emailOrUsername}`)
-            .eq('password', password);
+            .eq('username', emailOrUsername)
+            .eq('password', password)
+            .single();
+        
+        if (usernameError) {
+            searchError = usernameError;
+        }
+        
+        // If not found by username, try by email
+        if (!usersByUsername) {
+            const { data: usersByEmail, error: emailError } = await window.supabaseClient
+                .from('users')
+                .select('*')
+                .eq('email', emailOrUsername)
+                .eq('password', password)
+                .single();
+            
+            if (emailError) {
+                searchError = emailError;
+            }
+            
+            if (usersByEmail) {
+                user = usersByEmail;
+            }
+        } else {
+            user = usersByUsername;
+        }
 
-        if (error) {
-            console.error('Supabase error:', error);
+        if (searchError && !user) {
+            console.error('Supabase error:', searchError);
             showModal('Login Failed', 'Database error. Please try again.', false);
             return;
         }
 
-        if (!users || users.length === 0) {
+        if (!user) {
             showModal('Login Failed', 'Invalid email/username or password.', false);
             return;
         }
-
-        const user = users[0];
 
         // Set current user session
         localStorage.setItem('currentUser', JSON.stringify({
