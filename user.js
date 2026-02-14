@@ -53,10 +53,11 @@ document.addEventListener('click', (e) => {
 // ===== BALANCE AND PORTFOLIO FUNCTIONALITY =====
 
 // Balance data
-let currentBalance = parseFloat(localStorage.getItem('cachedBalance') || '0.00');
+let currentBalance = 0;
 let balanceChange = 0.00;
 let userBalanceSubscription = null;
 let balanceVisible = true;
+let balanceLoaded = false; // Track if balance has been loaded from database
 
 // Fetch user balance from database
 async function fetchUserBalance() {
@@ -126,8 +127,7 @@ function setupBalanceSubscription() {
                 } else if (status === 'CLOSED') {
                     console.log('Balance subscription closed');
                 }
-            })
-            .subscribe();
+            });
 
         // Balance subscription set up
     } catch (error) {
@@ -144,6 +144,9 @@ let portfolioData = [
     { symbol: 'TUSD', name: 'TrueUSD', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/3449/large/tusd.png' },
     { symbol: 'USDC', name: 'USD Coin', amount: 0, value: 0, price: 1.00, change: 0.01, image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png' }
 ];
+
+// Flag to track if live prices have been successfully fetched
+let livePricesFetched = false;
 
 // Load user portfolio from database
 async function loadUserPortfolio() {
@@ -182,24 +185,45 @@ async function loadUserPortfolio() {
     }
 }
 
-// Calculate total balance from database
+// Calculate total balance from portfolio (coin values)
 async function calculateTotalBalance() {
-    const dbBalance = await fetchUserBalance();
-    if (dbBalance !== null) {
-        currentBalance = dbBalance;
-        // Always cache the balance when successfully fetched
+    // First load the portfolio to get the amounts
+    await loadUserPortfolio();
+    
+    // Calculate total balance from sum of all coin values
+    const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+    
+    // Use the portfolio sum as the total balance
+    if (portfolioSum > 0) {
+        currentBalance = portfolioSum;
+        // Cache the balance
         localStorage.setItem('cachedBalance', currentBalance.toString());
-        console.log('Balance updated from database:', currentBalance);
+        console.log('Balance calculated from portfolio:', currentBalance);
     } else {
-        console.log('Failed to fetch balance from database, keeping current balance:', currentBalance);
+        // Fallback to database balance if portfolio is empty
+        const dbBalance = await fetchUserBalance();
+        if (dbBalance !== null) {
+            currentBalance = dbBalance;
+            localStorage.setItem('cachedBalance', currentBalance.toString());
+            console.log('Balance updated from database:', currentBalance);
+        } else {
+            console.log('Failed to fetch balance, keeping current balance:', currentBalance);
+        }
     }
-    // If fetch fails, keep the current balance to prevent it from disappearing
 }
 
 // Update balance display
 function updateBalance() {
     const totalBalanceElement = document.getElementById('total-balance');
     const balanceChangeElement = document.getElementById('balance-change');
+
+    // Show "...." if balance hasn't been loaded yet
+    if (!balanceLoaded) {
+        totalBalanceElement.textContent = '....';
+        balanceChangeElement.textContent = '--';
+        balanceChangeElement.className = 'balance-change';
+        return;
+    }
 
     const formattedBalance = `$${formatNumberWithCommas(currentBalance.toFixed(2))}`;
 
@@ -222,6 +246,24 @@ function updatePortfolio() {
         const portfolioItem = document.createElement('div');
         portfolioItem.className = 'portfolio-item';
 
+        // Only show prices if live prices have been successfully fetched
+        let priceHtml = '';
+        if (livePricesFetched) {
+            priceHtml = `
+                <div class="coin-price">
+                    <span class="price">$${coin.price.toFixed(2)}</span>
+                    <span class="change ${coin.change >= 0 ? 'positive' : 'negative'}">${coin.change >= 0 ? '+' : ''}${coin.change.toFixed(2)}%</span>
+                </div>
+            `;
+        } else {
+            priceHtml = `
+                <div class="coin-price">
+                    <span class="price">--</span>
+                    <span class="change">--</span>
+                </div>
+            `;
+        }
+
         portfolioItem.innerHTML = `
             <div class="coin-info">
                 <div class="coin-icon">
@@ -236,10 +278,7 @@ function updatePortfolio() {
                 <span class="amount">${coin.amount.toFixed(4)} ${coin.symbol}</span>
                 <span class="value">$${coin.value.toFixed(2)}</span>
             </div>
-            <div class="coin-price">
-                <span class="price">$${coin.price.toFixed(2)}</span>
-                <span class="change ${coin.change >= 0 ? 'positive' : 'negative'}">${coin.change >= 0 ? '+' : ''}${coin.change.toFixed(2)}%</span>
-            </div>
+            ${priceHtml}
         `;
 
         portfolioList.appendChild(portfolioItem);
@@ -273,6 +312,9 @@ refreshBtn.addEventListener('click', async () => {
     // Fetch live prices
     const livePrices = await fetchLivePrices();
     if (livePrices) {
+        // Mark live prices as successfully fetched
+        livePricesFetched = true;
+        
         portfolioData.forEach(coin => {
             const coinId = coin.symbol.toLowerCase() === 'bnb' ? 'binancecoin' : coin.symbol.toLowerCase();
             if (livePrices[coinId]) {
@@ -300,19 +342,61 @@ refreshBtn.addEventListener('click', async () => {
 
 // Function to initialize user data after Supabase is ready
 async function initializeUserData() {
+    balanceLoaded = false; // Reset to ensure balance shows "...." until fully loaded
+    livePricesFetched = false; // Reset to ensure we wait for live prices
+    
+    // Fetch balance from database but DON'T show it yet - keep showing "...."
     const dbBalance = await fetchUserBalance(); // Fetch balance from database
     if (dbBalance !== null) {
         currentBalance = dbBalance;
         // Update cache with fresh database value
         localStorage.setItem('cachedBalance', currentBalance.toString());
     } // If dbBalance is null, keep the cached value from initialization
+    
+    // Keep balanceLoaded = false while loading portfolio - don't show balance yet
     await loadUserPortfolio(); // Load portfolio from database
+    
+    // Still keep balanceLoaded = false - calculate from portfolio first (with placeholder prices)
     await calculateTotalBalance(); // Calculate balance from portfolio with fallback
+    
+    // IMPORTANT: Do NOT show balance yet! Wait for live prices first.
+    // The balance will only be shown after live prices are fetched below.
+    
+    // Fetch live prices FIRST before showing any balance
+    // This ensures the balance includes live coin prices
+    const livePrices = await fetchLivePrices();
+    if (livePrices) {
+        // Mark live prices as successfully fetched
+        livePricesFetched = true;
+        
+        // Update portfolio with live prices
+        portfolioData.forEach(coin => {
+            const coinId = coin.symbol.toLowerCase() === 'bnb' ? 'binancecoin' : coin.symbol.toLowerCase();
+            if (livePrices[coinId]) {
+                coin.price = livePrices[coinId].usd;
+                coin.change = livePrices[coinId].usd_24h_change || 0;
+                coin.value = coin.amount * coin.price;
+            }
+        });
+        
+        // Recalculate balance with live prices
+        const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+        if (portfolioSum > 0) {
+            currentBalance = portfolioSum;
+            localStorage.setItem('cachedBalance', currentBalance.toString());
+        }
+        
+        // Calculate balance change
+        balanceChange = portfolioData.reduce((sum, coin) => sum + (coin.change * coin.value / (portfolioSum || 1)), 0);
+    }
+    
+    // NOW show the balance - it's fully updated with LIVE prices
+    balanceLoaded = true; // Mark balance as loaded
     updateBalance();
-    setupBalanceSubscription();
     updatePortfolio();
+    setupBalanceSubscription();
     loadUserProfilePicture();
-    setupLivePriceUpdates(); // Start live price updates
+    setupLivePriceUpdates(); // Start live price updates for ongoing updates
 }
 
 // Eye icon toggle functionality
@@ -1216,8 +1300,16 @@ function formatNumberWithCommas(num) {
 // Fetch live prices from CoinGecko API
 async function fetchLivePrices() {
     try {
+        // Create an AbortController with a 3-second timeout for faster response
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        
         // Using CoinGecko free API - no API key required
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,tether,true-usd,usd-coin&vs_currencies=usd&include_24hr_change=true');
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,tether,true-usd,usd-coin&vs_currencies=usd&include_24hr_change=true', {
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             throw new Error('Failed to fetch prices');
@@ -1247,6 +1339,9 @@ async function fetchLivePrices() {
 async function updateLivePrices() {
     const livePrices = await fetchLivePrices();
     if (livePrices) {
+        // Mark live prices as successfully fetched
+        livePricesFetched = true;
+        
         portfolioData.forEach(coin => {
             let coinId;
             switch(coin.symbol) {
@@ -1274,7 +1369,7 @@ async function updateLivePrices() {
     }
 }
 
-// Set up live price updates - fetch every 30 seconds
+// Set up live price updates - fetch every 15 seconds
 let livePriceInterval;
 
 function setupLivePriceUpdates() {
@@ -1286,10 +1381,10 @@ function setupLivePriceUpdates() {
     // Fetch live prices immediately
     updateLivePrices();
     
-    // Then fetch every 30 seconds
+    // Then fetch every 15 seconds for faster updates
     livePriceInterval = setInterval(() => {
         updateLivePrices();
-    }, 30000); // 30 seconds
+    }, 15000); // 15 seconds
 }
 
 // Generate QR code for wallet address using pre-generated images

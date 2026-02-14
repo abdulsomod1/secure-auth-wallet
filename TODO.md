@@ -1,20 +1,23 @@
-# TODO: Fix Navigation Menu for Phone Screen
+# TODO: Price Fetching Improvements
 
-## Plan:
-1. Fix sidebar mobile responsiveness in user.css
-   - Ensure sidebar hides/shows properly on mobile
-   - Fix main-content margin on mobile
-   - Clean up unnecessary CSS code
+## Task: Fix price fetching issues in user.js
 
-2. Fix mobile menu button functionality in user.js
-   - Ensure toggle works properly
-   - Add proper close functionality
+### Requirements:
+1. If live price is not fetched yet, don't show any price
+2. Make price fetching faster
+3. Don't delete unnecessary code
+\4. Don't do what user didn't ask
 
-3. Delete unnecessary code
-   - Remove any unused CSS
-   - Keep only what's needed for the fix
+### Implementation Steps:
 
-## Current Issues:
-- Sidebar transform on mobile may not work properly
-- Main-content margin-left doesn't adjust on mobile
-- Mobile menu button may need JavaScript to toggle sidebar
+- [x] 1. Add `livePricesFetched` flag to track if live prices have been successfully fetched
+- [ ] 2. Modify `updatePortfolio()` to check this flag and only show prices if true, otherwise show empty/placeholder
+- [ ] 3. Make price fetching faster by:
+  - [ ] 3a. Call `updateLivePrices()` immediately in `initializeUserData()` before other operations
+  - [ ] 3b. Reduce the interval from 30 seconds to 15 seconds
+  - [ ] 3c. Add a timeout to the fetch to prevent it from hanging
+- [ ] 4. Set `livePricesFetched = false` initially, and only set to `true` after successful fetch
+- [ ] 5. Test the implementation
+
+### File to Edit:
+- user.js

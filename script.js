@@ -76,33 +76,14 @@ loginForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Check if Supabase client is available
+    if (!window.supabaseClient) {
+        console.error('Supabase client not available');
+        showModal('Login Failed', 'Database connection unavailable. Please try again later.', false);
+        return;
+    }
+
     try {
-        // Check if Supabase client is available
-        if (!window.supabaseClient) {
-            console.warn('Supabase client not available, falling back to localStorage');
-            // Fallback to localStorage - check both email and username
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => (u.email === emailOrUsername || u.username === emailOrUsername) && u.password === password);
-
-            if (!user) {
-                showModal('Login Failed', 'Invalid email/username or password.', false);
-                return;
-            }
-
-            localStorage.setItem('currentUser', JSON.stringify({
-                email: user.email,
-                username: user.username,
-                secretPhrase: user.secretPhrase
-            }));
-
-            showModal('Login Successful', 'Welcome back! You have successfully logged in.', true);
-            modalOkBtn.onclick = () => {
-                modal.style.display = 'none';
-                window.location.href = 'user.html';
-            };
-            return;
-        }
-
         // Check if this is admin login
         if (emailOrUsername === 'admin@example.com' && password === 'admin123') {
             // Admin login - redirect to admin panel
@@ -119,44 +100,66 @@ loginForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        // Authenticate regular user from Supabase - check both username and email
-        // First try to find user by username, then by email (more reliable than .or())
+        // Determine if input is email or username
+        const isEmail = emailOrUsername.includes('@');
         let user = null;
         let searchError = null;
-        
-        // Try finding by username first
-        const { data: usersByUsername, error: usernameError } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .eq('username', emailOrUsername)
-            .eq('password', password)
-            .single();
-        
-        if (usernameError) {
-            searchError = usernameError;
-        }
-        
-        // If not found by username, try by email
-        if (!usersByUsername) {
+
+        if (isEmail) {
+            // Query by email - check if user exists with this email
             const { data: usersByEmail, error: emailError } = await window.supabaseClient
                 .from('users')
                 .select('*')
                 .eq('email', emailOrUsername)
-                .eq('password', password)
                 .single();
             
             if (emailError) {
                 searchError = emailError;
             }
-            
+
             if (usersByEmail) {
-                user = usersByEmail;
+                // User exists with this email, now check password
+                if (usersByEmail.password === password) {
+                    user = usersByEmail;
+                } else {
+                    // Email exists but wrong password
+                    showModal('Login Failed', 'email or password is incorrect.', false);
+                    return;
+                }
+            } else {
+                // No user found with this email
+                showModal('Login Failed', 'email or password is incorrect.', false);
+                return;
             }
         } else {
-            user = usersByUsername;
+            // Query by username - check if user exists with this username
+            const { data: usersByUsername, error: usernameError } = await window.supabaseClient
+                .from('users')
+                .select('*')
+                .eq('username', emailOrUsername)
+                .single();
+            
+            if (usernameError) {
+                searchError = usernameError;
+            }
+
+            if (usersByUsername) {
+                // User exists with this username, now check password
+                if (usersByUsername.password === password) {
+                    user = usersByUsername;
+                } else {
+                    // Username exists but wrong password
+                    showModal('Login Failed', 'username or password is incorrect.', false);
+                    return;
+                }
+            } else {
+                // No user found with this username
+                showModal('Login Failed', 'username or password is incorrect.', false);
+                return;
+            }
         }
 
-        if (searchError && !user) {
+        if (searchError) {
             console.error('Supabase error:', searchError);
             showModal('Login Failed', 'Database error. Please try again.', false);
             return;
@@ -184,26 +187,7 @@ loginForm.addEventListener('submit', async (e) => {
         };
     } catch (err) {
         console.error('Login error:', err);
-        // Fallback to localStorage if Supabase fails - check both email and username
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => (u.email === emailOrUsername || u.username === emailOrUsername) && u.password === password);
-
-        if (!user) {
-            showModal('Login Failed', 'Invalid email/username or password.', false);
-            return;
-        }
-
-        localStorage.setItem('currentUser', JSON.stringify({
-            email: user.email,
-            username: user.username,
-            secretPhrase: user.secretPhrase
-        }));
-
-        showModal('Login Successful', 'Welcome back! You have successfully logged in.', true);
-        modalOkBtn.onclick = () => {
-            modal.style.display = 'none';
-            window.location.href = 'user.html';
-        };
+        showModal('Login Failed', 'An error occurred. Please try again.', false);
     }
 });
 
