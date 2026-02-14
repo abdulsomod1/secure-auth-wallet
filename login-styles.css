@@ -300,20 +300,67 @@ body {
 
 .terms {
     margin-bottom: 25px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
 }
 
 .terms .checkbox-container {
     align-items: flex-start;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.terms .checkbox-container input[type="checkbox"] {
+    display: none;
+}
+
+.terms .checkmark {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-top: 2px;
+}
+
+.terms .checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-color: #4facfe;
+}
+
+.terms .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 11px;
+}
+
+.terms-text {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
 }
 
 .link {
-    color: #4facfe;
+    color: #3182ce;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 .link:hover {
+    color: #00f2fe;
     text-decoration: underline;
 }
 
@@ -370,6 +417,7 @@ body {
     align-items: center;
     gap: 10px;
     opacity: 0.9;
+    transition: transform 0.3s ease;
 }
 
 .feature i {
@@ -380,6 +428,24 @@ body {
 .feature span {
     font-size: 0.9rem;
     font-weight: 500;
+}
+
+/* Slanted arrangement for features */
+.feature-slant-1 {
+    transform: translateY(0px) rotate(-5deg);
+}
+
+.feature-slant-2 {
+    transform: translateY(15px) rotate(3deg);
+}
+
+.feature-slant-3 {
+    transform: translateY(5px) rotate(-2deg);
+}
+
+.feature:hover {
+    transform: scale(1.1) rotate(0deg) !important;
+    opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -409,13 +475,14 @@ body {
     }
 
     .features-preview {
-        flex-direction: column;
+        flex-direction: row-reverse;
         gap: 20px;
     }
 
     .feature {
         flex-direction: row;
         gap: 15px;
+        transform: none !important;
     }
 
     .feature i {
