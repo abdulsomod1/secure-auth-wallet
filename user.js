@@ -312,6 +312,7 @@ async function initializeUserData() {
     setupBalanceSubscription();
     updatePortfolio();
     loadUserProfilePicture();
+    setupLivePriceUpdates(); // Start live price updates
 }
 
 // Eye icon toggle functionality
@@ -1212,10 +1213,83 @@ function formatNumberWithCommas(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-// Fetch live prices (placeholder for future implementation)
+// Fetch live prices from CoinGecko API
 async function fetchLivePrices() {
-    // This would fetch from CoinGecko API in a real implementation
-    return null;
+    try {
+        // Using CoinGecko free API - no API key required
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,tether,true-usd,usd-coin&vs_currencies=usd&include_24hr_change=true');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch prices');
+        }
+        
+        const data = await response.json();
+        
+        // Map CoinGecko response to our portfolio format
+        const prices = {
+            'bitcoin': { usd: data.bitcoin?.usd || 0, usd_24h_change: data.bitcoin?.usd_24h_change || 0 },
+            'ethereum': { usd: data.ethereum?.usd || 0, usd_24h_change: data.ethereum?.usd_24h_change || 0 },
+            'binancecoin': { usd: data.binancecoin?.usd || 0, usd_24h_change: data.binancecoin?.usd_24h_change || 0 },
+            'tether': { usd: data.tether?.usd || 0, usd_24h_change: data.tether?.usd_24h_change || 0 },
+            'true-usd': { usd: data['true-usd']?.usd || 0, usd_24h_change: data['true-usd']?.usd_24h_change || 0 },
+            'usd-coin': { usd: data['usd-coin']?.usd || 0, usd_24h_change: data['usd-coin']?.usd_24h_change || 0 }
+        };
+        
+        console.log('Live prices fetched:', prices);
+        return prices;
+    } catch (error) {
+        console.error('Error fetching live prices:', error);
+        return null;
+    }
+}
+
+// Update portfolio with live prices (called periodically)
+async function updateLivePrices() {
+    const livePrices = await fetchLivePrices();
+    if (livePrices) {
+        portfolioData.forEach(coin => {
+            let coinId;
+            switch(coin.symbol) {
+                case 'BTC': coinId = 'bitcoin'; break;
+                case 'BNB': coinId = 'binancecoin'; break;
+                case 'ETH': coinId = 'ethereum'; break;
+                case 'USDT': coinId = 'tether'; break;
+                case 'TUSD': coinId = 'true-usd'; break;
+                case 'USDC': coinId = 'usd-coin'; break;
+            }
+            
+            if (coinId && livePrices[coinId]) {
+                coin.price = livePrices[coinId].usd;
+                coin.change = livePrices[coinId].usd_24h_change || 0;
+                coin.value = coin.amount * coin.price;
+            }
+        });
+        
+        // Calculate balance change
+        const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+        balanceChange = portfolioData.reduce((sum, coin) => sum + (coin.change * coin.value / (portfolioSum || 1)), 0);
+        
+        updatePortfolio();
+        updateBalance();
+    }
+}
+
+// Set up live price updates - fetch every 30 seconds
+let livePriceInterval;
+
+function setupLivePriceUpdates() {
+    // Clear any existing interval
+    if (livePriceInterval) {
+        clearInterval(livePriceInterval);
+    }
+    
+    // Fetch live prices immediately
+    updateLivePrices();
+    
+    // Then fetch every 30 seconds
+    livePriceInterval = setInterval(() => {
+        updateLivePrices();
+    }, 30000); // 30 seconds
 }
 
 // Generate QR code for wallet address using pre-generated images
