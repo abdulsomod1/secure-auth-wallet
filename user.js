@@ -116,16 +116,56 @@ function setupBalanceSubscription() {
 
                 // Check if the updated user is the current user
                 if (payload.new && payload.new.email === currentUser.email && payload.new.balance !== undefined) {
-                    // Update balance directly from payload for immediate update
+                    console.log('Balance update received from admin:', payload.new.balance);
+                    
+                    // First, update the balance directly from admin's setting
                     currentBalance = parseFloat(payload.new.balance) || 0.00;
+                    
+                    // Load the portfolio to get coin amounts
+                    await loadUserPortfolio();
+                    
+                    // Fetch live prices and recalculate balance with live prices
+                    const livePrices = await fetchLivePrices();
+                    if (livePrices) {
+                        livePricesFetched = true;
+                        
+                        // Update portfolio with live prices and recalculate total
+                        let newTotalBalance = 0;
+                        portfolioData.forEach(coin => {
+                            let coinId;
+                            switch(coin.symbol) {
+                                case 'BTC': coinId = 'bitcoin'; break;
+                                case 'BNB': coinId = 'binancecoin'; break;
+                                case 'ETH': coinId = 'ethereum'; break;
+                                case 'USDT': coinId = 'tether'; break;
+                                case 'TUSD': coinId = 'true-usd'; break;
+                                case 'USDC': coinId = 'usd-coin'; break;
+                            }
+                            
+                            if (coinId && livePrices[coinId]) {
+                                coin.price = livePrices[coinId].usd;
+                                coin.change = livePrices[coinId].usd_24h_change || 0;
+                                coin.value = coin.amount * coin.price;
+                                newTotalBalance += coin.value;
+                            }
+                        });
+                        
+                        // Use the recalculated balance with live prices
+                        if (newTotalBalance > 0) {
+                            currentBalance = newTotalBalance;
+                        }
+                        
+                        // Calculate balance change
+                        const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+                        balanceChange = portfolioData.reduce((sum, coin) => sum + (coin.change * coin.value / (portfolioSum || 1)), 0);
+                    }
+                    
+                    // Update displays
                     updateBalance();
+                    updatePortfolio();
+                    
+                    console.log('Balance updated with live prices:', currentBalance);
                 }
-
-                // Reload portfolio in background for consistency
-                await loadUserPortfolio();
-                await calculateTotalBalance();
-                updateBalance();
-                updatePortfolio();
             })
             .subscribe((status) => {
                 console.log('Balance subscription status:', status);
@@ -207,14 +247,10 @@ async function calculateTotalBalance() {
     // Calculate total balance from sum of all coin values
     const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
     
-    // Only use portfolio sum - NEVER fall back to database balance!
-    if (portfolioSum > 0) {
-        currentBalance = portfolioSum;
-        localStorage.setItem('cachedBalance', currentBalance.toString());
-        console.log('Balance calculated from portfolio:', currentBalance);
-    }
-    // If portfolioSum is 0, we keep currentBalance as-is (don't change it!)
-    // This prevents showing database balance when portfolio is empty
+    // Always update currentBalance with portfolio sum - this ensures auto-refresh works properly
+    currentBalance = portfolioSum;
+    localStorage.setItem('cachedBalance', currentBalance.toString());
+    console.log('Balance calculated from portfolio:', currentBalance);
 }
 
 // Update balance display
@@ -507,13 +543,13 @@ async function updateWelcomeMessage() {
         updatePortfolio();
     });
 
-    // Periodic refresh every 5 minutes to prevent balance from disappearing
+    // Periodic refresh every 30 seconds to keep balance updated
     setInterval(async () => {
         await loadUserPortfolio();
         await calculateTotalBalance();
         updateBalance();
         updatePortfolio();
-    }, 300000); // 5 minutes = 300000 milliseconds
+    }, 30000); // 30 seconds = 30000 milliseconds
 
     // Prevent back button from navigating away from dashboard
     window.history.pushState(null, null, window.location.href);
@@ -1330,9 +1366,9 @@ function formatNumberWithCommas(num) {
 // Fetch live prices from CoinGecko API
 async function fetchLivePrices() {
     try {
-        // Create an AbortController with a 3-second timeout for faster response
+        // Create an AbortController with a 1-second timeout for FAST response
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), 1000);
         
         // Using CoinGecko free API - no API key required
         const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,tether,true-usd,usd-coin&vs_currencies=usd&include_24hr_change=true', {
@@ -1390,12 +1426,22 @@ async function updateLivePrices() {
             }
         });
         
-        // Calculate balance change
+        // Calculate total balance from portfolio with live prices
         const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+        
+        // Update current balance with live price adjusted value
+        if (portfolioSum > 0) {
+            currentBalance = portfolioSum;
+            localStorage.setItem('cachedBalance', currentBalance.toString());
+        }
+        
+        // Calculate balance change
         balanceChange = portfolioData.reduce((sum, coin) => sum + (coin.change * coin.value / (portfolioSum || 1)), 0);
         
         updatePortfolio();
         updateBalance();
+        
+        console.log('Balance updated with live prices:', currentBalance);
     }
 }
 
