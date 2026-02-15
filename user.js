@@ -353,28 +353,40 @@ async function initializeUserData() {
     balanceLoaded = false; // Reset to ensure balance shows "...." until fully loaded
     livePricesFetched = false; // Reset to ensure we wait for live prices
     isInitialLoad = true; // Ensure this is set at the very beginning
-    
+
     // Force update balance display to show "...." immediately
     updateBalance();
-    
+
     // Fetch balance from database but DON'T use it yet - keep showing "...."
     // We will determine whether to use db balance or portfolio balance AFTER calculating with live prices
     const dbBalance = await fetchUserBalance(); // Fetch balance from database
-    
+
     // IMPORTANT: Do NOT call calculateTotalBalance() here!
     // That function sets currentBalance to dbBalance if portfolio is empty.
     // We want to keep showing "...." until we calculate with live prices.
-    
+
     // First load portfolio to get coin amounts - this is needed BEFORE we can calculate balance
     await loadUserPortfolio(); // Load portfolio from database (gets coin amounts)
-    
-    // Fetch live prices AFTER loading portfolio
-    // This ensures the balance includes live coin prices
+
+    // FAST BALANCE CALCULATION: Use default prices first for immediate display
+    // Calculate balance using the default prices in portfolioData (no waiting for API)
+    const initialPortfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
+
+    // Show balance immediately using default prices if portfolio has holdings
+    if (initialPortfolioSum > 0) {
+        currentBalance = initialPortfolioSum;
+        balanceLoaded = true; // Mark as loaded to show the balance
+        updateBalance();
+        updatePortfolio();
+    }
+
+    // NOW fetch live prices in background and update with real prices
+    // This happens asynchronously - balance is already shown above
     const livePrices = await fetchLivePrices();
     if (livePrices) {
         // Mark live prices as successfully fetched
         livePricesFetched = true;
-        
+
         // Update portfolio with live prices (now coin.amount is available from loadUserPortfolio)
         portfolioData.forEach(coin => {
             const coinId = coin.symbol.toLowerCase() === 'bnb' ? 'binancecoin' : coin.symbol.toLowerCase();
@@ -384,10 +396,10 @@ async function initializeUserData() {
                 coin.value = coin.amount * coin.price;
             }
         });
-        
+
         // Calculate balance with live prices
         const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
-        
+
         // CRITICAL: Only use portfolio balance if it has holdings
         // This is the key fix - we DON'T use database balance here!
         // If portfolio has holdings, use that; otherwise keep currentBalance at 0
@@ -396,29 +408,21 @@ async function initializeUserData() {
             localStorage.setItem('cachedBalance', currentBalance.toString());
         }
         // If portfolioSum is 0, we keep currentBalance at 0 (don't use dbBalance!)
-        
+
         // Calculate balance change
         const portfolioSumForChange = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
         balanceChange = portfolioData.reduce((sum, coin) => sum + (coin.change * coin.value / (portfolioSumForChange || 1)), 0);
     } else {
-        // Live prices failed - still need to determine balance
-        const portfolioSum = portfolioData.reduce((sum, coin) => sum + coin.value, 0);
-        
-        // CRITICAL: Only use portfolio balance if it has holdings
-        // If portfolio has holdings, use that; otherwise keep currentBalance at 0
-        if (portfolioSum > 0) {
-            currentBalance = portfolioSum;
-            localStorage.setItem('cachedBalance', currentBalance.toString());
-        }
-        // If portfolioSum is 0, we keep currentBalance at 0 (don't use dbBalance!)
+        // Live prices failed - keep the initial calculation
+        // currentBalance is already set above
     }
-    
-    // NOW show the balance - it's fully updated with LIVE prices (or 0 if portfolio is empty)
+
+    // Update display with final values (live prices if available, otherwise initial calculation)
     balanceLoaded = true; // Mark balance as loaded
     isInitialLoad = false; // Mark initial load as complete - allow subscription updates now
     updateBalance();
     updatePortfolio();
-    
+
     // Set up subscription AFTER balance is loaded to avoid interference
     setupBalanceSubscription();
     loadUserProfilePicture();
