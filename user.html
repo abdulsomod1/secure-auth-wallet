@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <div class="balance-amount">
-<span id="total-balance">....</span>
+                        <span id="total-balance">....</span>
                         <button id="eye-icon" class="eye-icon">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -286,7 +286,7 @@
                     <!-- Sample NFTs -->
                     <div class="nft-card">
                         <div class="nft-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRmYWNmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsxPC90ZXh0Pjwvc3ZnPg==" alt="NFT 1">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRmYWNmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsxPC90ZXh0Pjwvc3ZnPg==" alt="NFT 1">
                         </div>
                         <div class="nft-info">
                             <h3>Crypto Punk #1234</h3>
@@ -299,7 +299,7 @@
                     </div>
                     <div class="nft-card">
                         <div class="nft-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwZjJmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsyPC90ZXh0Pjwvc3ZnPg==" alt="NFT 2">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwZjJmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsyPC90ZXh0Pjwvc3ZnPg==" alt="NFT 2">
                         </div>
                         <div class="nft-info">
                             <h3>Bored Ape #5678</h3>
@@ -651,9 +651,77 @@
         </div>
     </div>
 
+    <!-- Session Validation - Must run first before any other scripts -->
+    <script>
+        // Check if user is logged in BEFORE loading any other scripts or content
+        (function() {
+            const currentUser = localStorage.getItem('currentUser');
+            
+            // If no currentUser found in localStorage, redirect to login immediately
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Try parsing the JSON - if it's invalid, redirect to login
+            try {
+                const userData = JSON.parse(currentUser);
+                if (!userData.email && !userData.username) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Store validated session data globally for immediate access by other scripts
+                window.validatedSession = true;
+                window.currentSessionEmail = userData.email || '';
+                window.currentSessionUsername = userData.username || '';
+                
+                console.log('Session validated for:', window.currentSessionEmail || window.currentSessionUsername);
+            } catch (e) {
+                console.error('Invalid session data:', e);
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        })();
+        
+        // Prevent back button from accessing this page after logout
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function(event) {
+            history.pushState(null, null, window.location.href);
+        });
+             
+        function preventBack() { 
+            history.forward(); 
+        }
+        setTimeout(preventBack(), 10);  
+         
+        // Additional protection: periodically verify session hasn't been cleared externally  
+        setInterval(function() {              
+            const storedCurrentUser = localStorage.getItem('currentUser');     
+            if(!storedCurrentUser){       
+                alert("Your session has expired. Please login again.");      
+                location.reload();    
+            } else {          
+                try{              
+                    var parsed = JSON.parse(storedCurrentUser);           
+                    if(!parsed.email && !parsed.username){               
+                        alert("Your session has expired. Please login again.");   
+                        location.reload();       
+                    }          
+                } catch(e){              
+                    alert("Your session has expired. Please login again.");
+                    location.reload();     
+                }      
+            }  
+        }, 10000);
+    </script>
+
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
     <script src="supabase-config.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+
     <script src="user.js"></script>
     <script>
         // Customer Service Functions
