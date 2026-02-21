@@ -6,7 +6,6 @@ const ADMIN_PASSWORD = 'admin123';
 
 // Global variables
 let allUsers = [];
-let currentEditingUser = null;
 let selectedDeductionPercent = 0;
 
 // Coin prices for portfolio calculations
@@ -67,15 +66,19 @@ document.addEventListener('click', (e) => {
 
 // ===== USER MANAGEMENT FUNCTIONALITY =====
 
-// Fetch all users from Supabase
+// Store just the user ID being edited (not the entire object to avoid reference issues)
+let currentEditingUserId = null;
+let currentEditingUserData = null;
+
+// Fetch all users from Supabase - with stable ordering by ID
 async function fetchUsers() {
     try {
-        // Fetch users from Supabase
+        // Fetch users from Supabase - order by ID for stable, predictable order
         if (window.supabaseClient) {
             const { data: users, error } = await window.supabaseClient
                 .from('users')
                 .select('id, email, balance, status, createdat')
-                .order('createdat', { ascending: false });
+                .order('id', { ascending: false });  // Changed to order by ID for stability
 
             if (error) {
                 console.error('Error fetching users from Supabase:', error);
@@ -213,7 +216,9 @@ let editBalanceModal, editBalanceClose, cancelEdit, saveBalance;
 
 // Open edit balance modal
 function openEditBalanceModal(user) {
-    currentEditingUser = user;
+    // Store only the ID and a copy of the data at the time of opening
+    currentEditingUserId = user.id;
+    currentEditingUserData = { ...user };
 
     document.getElementById('edit-user-email').textContent = user.email;
     document.getElementById('edit-current-balance').textContent = formatNumberWithCommas(user.balance.toFixed(2));
@@ -245,12 +250,11 @@ function closeEditBalanceModal() {
     balanceInput.removeEventListener('input', formatBalanceInput);
     balanceInput.removeEventListener('blur', formatBalanceInput);
 
-    // Reset selected percentage
+    // Reset selected percentage and user data
     selectedDeductionPercent = 0;
-    currentEditingUser = null;
+    currentEditingUserId = null;
+    currentEditingUserData = null;
 }
-
-
 
 // ===== MESSAGE TOAST FUNCTIONALITY =====
 
@@ -356,8 +360,6 @@ function formatBalanceInput(e) {
     }
 }
 
-
-
 // ===== AUTHENTICATION CHECK =====
 
 // Check if user is logged in as admin
@@ -402,6 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Save balance changes
     saveBalance.addEventListener('click', async () => {
+        // Validate that we have a user to edit
+        if (!currentEditingUserId) {
+            showMessage('No user selected for editing. Please try again.', 'error');
+            return;
+        }
+
         const newBalance = parseFloat(document.getElementById('new-balance').value.replace(/,/g, ''));
         const selectedCoin = document.getElementById('balance-coin').value;
         const reason = document.getElementById('edit-reason').value.trim();
@@ -445,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Calculate total balance from portfolio (should equal newBalance)
             const totalBalance = newBalance;
 
-            // Update user in Supabase
+            // Update user in Supabase - use the stored ID, not the object reference
             if (window.supabaseClient) {
                 const { error } = await window.supabaseClient
                     .from('users')
@@ -456,24 +464,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         deduction_percentage: selectedDeductionPercent,
                         updatedat: new Date().toISOString()
                     })
-                    .eq('id', currentEditingUser.id);
+                    .eq('id', currentEditingUserId);
 
                 if (error) {
                     console.error('Supabase update error:', error);
                     showMessage('Error updating balance in database. Please try again.', 'error');
                     return;
                 }
-            }
-
-            // Update local array
-            const userIndex = allUsers.findIndex(user => user.id === currentEditingUser.id);
-            if (userIndex !== -1) {
-                allUsers[userIndex].balance = totalBalance;
-
-                // Refresh data from database to ensure consistency
-                await fetchUsers();
 
                 showMessage(`Balance updated successfully! Set ${newBalance.toFixed(2)} USD worth of ${selectedCoin} (${coinAmount.toFixed(6)} ${selectedCoin}).`, 'success');
+                
+                // Refresh data from database after successful update
+                await fetchUsers();
+                
                 closeEditBalanceModal();
             }
         } catch (error) {
