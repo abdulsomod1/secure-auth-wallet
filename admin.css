@@ -1,9 +1,5 @@
 /* Admin Panel Professional Styles - Unique Dark Theme */
 
-*{
-  color: white;
-}
-
 :root {
   --admin-bg-primary: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
   --admin-card-bg: rgba(255, 255, 255, 0.05);
