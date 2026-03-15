@@ -47,6 +47,10 @@
   color: white;
 }
 
+.sure {
+  color: white;
+}
+
 .nav-item {
   color: var(--admin-text-secondary);
   border-left: 4px solid transparent;
@@ -409,6 +413,7 @@
   border-radius: 12px;
   padding: 20px;
   margin: 20px 0;
+  color: white;
 }
 
 #delete-confirm-modal .text-danger {
