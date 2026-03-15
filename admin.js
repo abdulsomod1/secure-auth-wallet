@@ -177,15 +177,76 @@ function displayUsers(users) {
                     <i class="fas fa-edit"></i>
                     Edit Balance
                 </button>
+                <button class="action-btn delete-btn" data-user-id="${user.id}" title="Delete User">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
             </td>
         `;
 
         // Add event listener for edit button
         const editBtn = row.querySelector('.edit-btn');
         editBtn.addEventListener('click', () => openEditBalanceModal(user));
+        
+    // Add event listener for delete button
+        const deleteBtn = row.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => openDeleteConfirmModal(user));
 
         tbody.appendChild(row);
     });
+}
+
+let currentDeletingUserId = null;
+let currentDeletingUserData = null;
+let deleteConfirmModal, deleteConfirmClose, cancelDelete, confirmDelete;
+
+// Open delete confirmation modal
+function openDeleteConfirmModal(user) {
+    currentDeletingUserId = user.id;
+    currentDeletingUserData = { ...user };
+
+    document.getElementById('delete-user-email').textContent = user.email;
+    document.getElementById('delete-user-balance').textContent = formatNumberWithCommas(user.balance.toFixed(2));
+
+    deleteConfirmModal.style.display = 'flex';
+    setTimeout(() => deleteConfirmModal.classList.add('show'), 10);
+}
+
+// Close delete confirmation modal
+function closeDeleteConfirmModal() {
+    deleteConfirmModal.classList.remove('show');
+    setTimeout(() => deleteConfirmModal.style.display = 'none', 300);
+
+    currentDeletingUserId = null;
+    currentDeletingUserData = null;
+}
+
+// Delete user account from Supabase
+async function deleteUserAccount() {
+    if (!currentDeletingUserId || !window.supabaseClient) {
+        showMessage('Database connection not available.', 'error');
+        return;
+    }
+
+    try {
+        const { error } = await window.supabaseClient
+            .from('users')
+            .delete()
+            .eq('id', currentDeletingUserId);
+
+        if (error) {
+            console.error('Error deleting user:', error);
+            showMessage(`Error deleting user: ${error.message}`, 'error');
+            return;
+        }
+
+        showMessage('User account deleted successfully from database!', 'success');
+        await fetchUsers();  // Refresh table
+        closeDeleteConfirmModal();
+    } catch (error) {
+        console.error('Delete error:', error);
+        showMessage('Error deleting user. Please try again.', 'error');
+    }
 }
 
 // Update overview statistics
@@ -496,6 +557,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set the selected percentage
             selectedDeductionPercent = parseInt(e.target.getAttribute('data-percent'));
         });
+    });
+
+    // Initialize delete modal elements
+    deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    deleteConfirmClose = document.getElementById('delete-confirm-close');
+    cancelDelete = document.getElementById('cancel-delete');
+    confirmDelete = document.getElementById('confirm-delete');
+
+    // Add event listeners for delete modal
+    deleteConfirmClose.addEventListener('click', closeDeleteConfirmModal);
+    cancelDelete.addEventListener('click', closeDeleteConfirmModal);
+    confirmDelete.addEventListener('click', deleteUserAccount);
+
+    // Close delete modal when clicking outside
+    deleteConfirmModal.addEventListener('click', (e) => {
+        if (e.target === deleteConfirmModal) {
+            closeDeleteConfirmModal();
+        }
     });
 
     // Set default active section
