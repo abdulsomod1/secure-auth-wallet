@@ -1,5 +1,9 @@
 /* Admin Panel Professional Styles - Unique Dark Theme */
 
+*{
+  color: white;
+}
+
 :root {
   --admin-bg-primary: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
   --admin-card-bg: rgba(255, 255, 255, 0.05);
@@ -41,6 +45,10 @@
 .sidebar-header .logo i {
   color: #00d4ff;
   text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+}
+
+.All-users {
+  color: white;
 }
 
 .nav-item {
