@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Input listeners for live preview
     const receiptInputs = [
         'receipt-quantity', 'receipt-status', 'receipt-account', 'receipt-fees',
-        'receipt-chain', 'receipt-address', 'receipt-txhash'
+        'receipt-chain', 'receipt-time', 'receipt-address', 'receipt-txhash'
     ];
     receiptInputs.forEach(id => {
         const el = document.getElementById(id);
