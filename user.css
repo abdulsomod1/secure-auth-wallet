@@ -383,6 +383,93 @@ body {
     gap: 15px;
 }
 
+/* ===== NEW QUICK ACTIONS SECTION ===== */
+.action-section {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(25px) saturate(180%);
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+}
+
+.action-section .section-header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.action-section .section-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, deepskyblue 0%, #00bfff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin: 0;
+    text-shadow: none;
+}
+
+/* RESPONSIVE FOR NEW SECTION */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .action-section {
+        padding: 30px 25px;
+    }
+    .action-section .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .action-section {
+        padding: 25px 20px;
+        margin-bottom: 25px;
+    }
+    .action-section .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .action-section .quick-actions .action-btn {
+        flex: 1 1 calc(50% - 4px);
+    }
+    .action-section .quick-actions .action-btn:last-child {
+        flex-basis: 100%;
+    }
+    .action-section .section-header h2 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-section {
+        padding: 20px 15px;
+    }
+    .action-section .quick-actions {
+        gap: 6px;
+    }
+    .action-section .quick-actions .action-btn {
+        flex: 1 1 calc(50% - 3px);
+    }
+    .action-section .section-header h2 {
+        font-size: 1.3rem;
+    }
+}
+
 /* ===== PROFESSIONAL QUICK ACTION BUTTONS ===== */
 .action-btn {
     display: flex;
@@ -571,6 +658,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 @media (max-width: 480px) {
     .quick-actions {
         gap: 6px;
+        margin-top: 21%;
     }
     .action-btn {
         flex: 1 1 calc(50% - 3px);
