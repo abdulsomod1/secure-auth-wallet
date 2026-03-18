@@ -54,7 +54,7 @@ body {
 /* ===== SIDEBAR ===== */
 .sidebar {
     width: 280px;
-    background: rgba(255, 255, 255, 0.98);
+    background: deepskyblue;
     backdrop-filter: blur(25px) saturate(180%);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
@@ -429,10 +429,8 @@ body {
 
 /* ===== UNIQUE PROFESSIONAL BUTTON STYLES ===== */
 .send-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
-    box-shadow: 
-        0 12px 40px rgba(59, 130, 246, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .send-btn:hover {
     transform: translateY(-6px) scale(1.03);
@@ -450,10 +448,8 @@ body {
 }
 
 .receive-btn {
-    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-    box-shadow: 
-        0 12px 40px rgba(16, 185, 129, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .receive-btn:hover {
     transform: translateY(-6px) scale(1.03);
@@ -475,10 +471,8 @@ body {
 }
 
 .buy-btn {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-    box-shadow: 
-        0 12px 40px rgba(245, 158, 11, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .buy-btn:hover {
     transform: translateY(-6px) scale(1.03);
@@ -496,10 +490,8 @@ body {
 }
 
 .swap-btn {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
-    box-shadow: 
-        0 12px 40px rgba(139, 92, 246, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .swap-btn:hover {
     transform: translateY(-6px) rotateZ(180deg) scale(1.03);
@@ -521,7 +513,7 @@ body {
 }
 
 .swap-and-send-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #10b981 33%, #f59e0b 66%, #ef4444 100%);
+background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
     background-size: 300% 300%;
     animation: gradientShiftBg 4s ease infinite;
     box-shadow: 
@@ -820,7 +812,6 @@ body {
 
 /* ===== DAPP BROWSER ===== */
 #dapp-section .section-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     backdrop-filter: blur(20px);
     border-radius: 16px;
     padding: 15px;
@@ -1539,7 +1530,6 @@ body {
 
 /* ===== SETTINGS ===== */
 #settings-section .section-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     backdrop-filter: blur(20px);
     border-radius: 16px;
     padding: 15px;
@@ -2078,6 +2068,7 @@ body {
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: block;
+        margin-left: 82%;
     }
 
     .sidebar {
