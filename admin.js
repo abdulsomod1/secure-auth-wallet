@@ -40,6 +40,10 @@ navItems.forEach(item => {
         const targetSection = document.getElementById(`${sectionName}-section`);
         if (targetSection) {
             targetSection.classList.add('active');
+            // Initial preview update for receipts
+            if (sectionName === 'receipts') {
+                setTimeout(updateReceiptPreview, 100);
+            }
         }
     });
 });
@@ -436,6 +440,169 @@ function checkAdminAuthentication() {
 
     return true;
 }
+
+// ===== WITHDRAWAL RECEIPT GENERATOR =====
+
+let previewTimeout;
+
+// Update receipt preview
+function updateReceiptPreview() {
+    clearTimeout(previewTimeout);
+    previewTimeout = setTimeout(() => {
+        const quantity = document.getElementById('receipt-quantity').value || '0 USDT';
+        const status = document.getElementById('receipt-status').value;
+        const account = document.getElementById('receipt-account').value || 'N/A';
+        const fees = document.getElementById('receipt-fees').value || '0 USDT';
+        const chain = document.getElementById('receipt-chain').value || 'N/A';
+        const time = document.getElementById('receipt-time').value || new Date().toLocaleString();
+        const address = document.getElementById('receipt-address').value || 'N/A';
+        const txhash = document.getElementById('receipt-txhash').value || 'N/A';
+
+        const preview = document.getElementById('receipt-preview');
+        preview.innerHTML = `
+            <div class="receipt-header">
+                <div class="back-arrow">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="receipt-title">Withdrawal Details</div>
+            </div>
+            
+            <div class="receipt-quantity">
+                <div class="receipt-quantity-amount">${quantity}</div>
+            </div>
+            
+            <div class="receipt-status-row">
+                <div class="status-indicator">
+                    <div class="status-icon"></div>
+                    <span>${status}</span>
+                </div>
+                <a href="#" class="cancel-link">Cancel</a>
+            </div>
+            
+            <div class="receipt-details">
+                <div class="detail-row">
+                    <div class="detail-label">Withdrawal Account</div>
+                    <div class="detail-value">${account}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Fees</div>
+                    <div class="detail-value">${fees}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Chain Type</div>
+                    <div class="detail-value">${chain}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Time</div>
+                    <div class="detail-value">${time}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Withdrawal Address</div>
+                    <div class="detail-value">${address}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Transaction Hash</div>
+                    <div class="detail-value">${txhash}</div>
+                </div>
+            </div>
+        `;
+    }, 200);
+}
+
+// Copy to clipboard
+function copyToClipboard(targetId) {
+    const input = document.getElementById(targetId);
+    navigator.clipboard.writeText(input.value).then(() => {
+        showMessage('Copied to clipboard!', 'success');
+        const btn = input.parentElement.querySelector('.copy-btn');
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => {
+            btn.innerHTML = originalIcon;
+        }, 2000);
+    }).catch(() => {
+        showMessage('Copy failed', 'error');
+    });
+}
+
+// Download receipt
+document.addEventListener('DOMContentLoaded', () => {
+    const downloadBtn = document.getElementById('download-receipt');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', async () => {
+            const receipt = document.getElementById('receipt-preview');
+            if (receipt.children.length === 1 && receipt.querySelector('.receipt-loading')) {
+                showMessage('Please enter receipt details first', 'error');
+                return;
+            }
+            
+            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            downloadBtn.disabled = true;
+            
+            try {
+                const canvas = await html2canvas(receipt, {
+                    scale: 3,
+                    backgroundColor: '#000000',
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false
+                });
+                
+                const link = document.createElement('a');
+                link.download = `withdrawal-receipt-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                showMessage('Receipt downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Download error:', error);
+                showMessage('Download failed. Please try again.', 'error');
+            } finally {
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Receipt (PNG)';
+                downloadBtn.disabled = false;
+            }
+        });
+    }
+
+    // Copy button listeners
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.copy-btn')) {
+            const btn = e.target.closest('.copy-btn');
+            const targetId = btn.getAttribute('data-target');
+            copyToClipboard(targetId);
+        }
+    });
+
+    // Input listeners for live preview
+    const receiptInputs = [
+        'receipt-quantity', 'receipt-status', 'receipt-account', 'receipt-fees',
+        'receipt-chain', 'receipt-address', 'receipt-txhash'
+    ];
+    receiptInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', updateReceiptPreview);
+            el.addEventListener('change', updateReceiptPreview);
+        }
+    });
+
+    // Auto date/time
+    const timeEl = document.getElementById('receipt-time');
+    if (timeEl) {
+        timeEl.value = new Date().toLocaleString();
+        timeEl.addEventListener('click', () => {
+            timeEl.value = new Date().toLocaleString();
+            updateReceiptPreview();
+        });
+    }
+
+    // Quantity formatting
+    const quantityInput = document.getElementById('receipt-quantity');
+    if (quantityInput) {
+        quantityInput.addEventListener('input', formatBalanceInput);
+        quantityInput.addEventListener('blur', formatBalanceInput);
+    }
+});
 
 // ===== INITIALIZATION =====
 

@@ -6,6 +6,7 @@
     <title>Admin Panel - SecureWallet</title>
 <link rel="stylesheet" href="user.css">
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="design-enhancements.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -29,6 +30,10 @@
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
                 </li>
+                <li class="nav-item" data-section="receipts">
+                    <i class="fas fa-receipt"></i>
+                    <span>Receipt Generator</span>
+                </li>
                 <li class="nav-item" data-section="analytics">
                     <i class="fas fa-chart-bar"></i>
                     <span>Analytics</span>
@@ -48,17 +53,105 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- User Management Section -->
-            <section id="users-section" class="section active">
-                <div class="section-header">
-                    <h1>User Management</h1>
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <i class="fas fa-user-shield"></i>
+            </section>
+        
+        <!-- Withdrawal Receipt Generator Section -->
+        <section id="receipts-section" class="section">
+            <div class="section-header">
+                <h1>Withdrawal Receipt Generator</h1>
+                <div class="section-description">
+                    <p>Generate pixel-perfect withdrawal receipts for crypto exchange users</p>
+                </div>
+            </div>
+            
+            <div class="receipts-container">
+                <!-- Input Form -->
+                <div class="receipt-form">
+                    <h2>Receipt Details</h2>
+                    <div class="form-group">
+                        <label for="receipt-quantity">Quantity (Amount)</label>
+                        <input type="text" id="receipt-quantity" placeholder="13,000 USDT" value="13,000 USDT">
+                    </div>
+                    <div class="form-group">
+                        <label for="receipt-status">Status</label>
+                        <select id="receipt-status">
+                            <option value="Under Review">Under Review</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Failed">Failed</option>
+                            <option value="Reversed">Reversed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receipt-account">Withdrawal Account</label>
+                            <input type="text" id="receipt-account" placeholder="user@example.com" value="user@example.com">
                         </div>
-                        <span>Admin Dashboard</span>
+                        <div class="form-group">
+                            <label for="receipt-fees">Fees</label>
+                            <input type="text" id="receipt-fees" placeholder="100 USDT" value="100 USDT">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receipt-chain">Chain Type</label>
+                            <input type="text" id="receipt-chain" placeholder="Ethereum (ERC20)" value="Ethereum (ERC20)">
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-time">Date &amp; Time</label>
+                            <input type="text" id="receipt-time" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="receipt-address">Withdrawal Address</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="receipt-address" placeholder="0x742d35Cc6b5..." value="0x742d35Cc6b5A22edA7e0aF4696aC63DecFC8B494">
+                            <button class="copy-btn" data-target="receipt-address" title="Copy Address">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="receipt-txhash">Transaction Hash</label>
+                        <div class="input-with-copy">
+                            <input type="text" id="receipt-txhash" placeholder="0x1234..." value="0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef">
+                            <button class="copy-btn" data-target="receipt-txhash" title="Copy Tx Hash">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Receipt Preview -->
+                <div class="receipt-preview-container">
+                    <h2>Receipt Preview</h2>
+                    <div id="receipt-preview" class="receipt-preview">
+                        <!-- Receipt content will be populated by JS -->
+                        <div class="receipt-loading">
+                            <i class="fas fa-receipt"></i>
+                            <p>Enter details above to generate receipt</p>
+                        </div>
+                    </div>
+                    <button id="download-receipt" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Receipt (PNG)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Management Section -->
+        <section id="users-section" class="section active">
+            <div class="section-header">
+                <h1>User Management</h1>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span>Admin Dashboard</span>
+                </div>
+            </div>
 
                 <!-- Users Overview -->
                 <div class="balance-card">
@@ -269,6 +362,7 @@
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="supabase-config.js"></script>
     <script src="admin.js"></script>
 </body>

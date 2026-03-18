@@ -1,0 +1,210 @@
+/* PREMIUM UI/UX ENHANCEMENTS - Global Overrides & Animations */
+/* ADD TO ALL PAGES - Lightweight, non-breaking enhancements */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+/* ===== ROOT VARIABLES - Modern SaaS Palette ===== */
+:root {
+  --premium-primary: #6366f1; /* Indigo 500 */
+  --premium-accent: #10b981; /* Emerald 500 */
+  --premium-success: #059669; /* Emerald 600 */
+  --premium-warning: #d97706; /* Amber 600 */
+  --premium-error: #dc2626; /* Red 600 */
+  --premium-bg-glass: rgba(255, 255, 255, 0.85);
+  --premium-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --premium-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --premium-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --premium-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --premium-glow-primary: 0 0 0 3px rgb(99 102 241 / 0.2);
+  --premium-glow-accent: 0 0 0 3px rgb(16 185 129 / 0.2);
+  --anim-duration-short: 0.15s;
+  --anim-duration-base: 0.2s;
+  --anim-duration-med: 0.3s;
+  --anim-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== GLOBAL TYPOGRAPHY OVERRIDE ===== */
+* {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3rem) !important; font-weight: 700 !important; line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem) !important; font-weight: 600 !important; line-height: 1.2; }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem) !important; font-weight: 600 !important; }
+h4 { font-size: 1.125rem !important; font-weight: 600 !important; }
+
+body, input, textarea, select { font-weight: 400; line-height: 1.6; }
+
+/* ===== PAGE TRANSITION ===== */
+body {
+  animation: fadeSlideIn var(--anim-duration-med) var(--anim-ease-out);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== BUTTON ENHANCEMENTS ===== */
+/* Loading spinner in buttons (CSS-only, triggered by .loading class) */
+button.auth-btn.loading::after,
+button.action-btn.loading::after,
+button.btn-primary.loading::after,
+button.setting-btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: buttonLoadingSpinner 1s linear infinite;
+}
+
+@keyframes buttonLoadingSpinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+button {
+  transition: all var(--anim-duration-base) var(--anim-ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover:not(:disabled):not(.loading) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: var(--premium-shadow-xl);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Specific button hovers */
+.auth-btn:hover, .action-btn:hover, .btn-primary:hover, .setting-btn:hover {
+  box-shadow: 0 10px 25px rgb(99 102 241 / 0.4);
+}
+
+.logout-btn:hover {
+  box-shadow: 0 10px 25px rgb(220 38 38 / 0.4);
+}
+
+/* ===== INPUT FOCUS & MICRO-INTERACTIONS ===== */
+.input-group input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: var(--premium-glow-primary), var(--premium-shadow-md);
+  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.input-group input {
+  transition: all var(--anim-duration-base) var(--anim-ease-out);
+}
+
+.input-group input:focus + label i,
+.input-group label i {
+  color: var(--premium-primary) !important;
+  transform: scale(1.1);
+}
+
+/* Checkbox enhancements */
+.checkbox-container {
+  transition: all var(--anim-duration-short) var(--anim-ease-out);
+}
+
+.checkbox-container:hover .checkmark {
+  transform: scale(1.05);
+  box-shadow: var(--premium-shadow-sm);
+}
+
+.checkbox-container input:checked + .checkmark {
+  animation: checkmarkPulse var(--anim-duration-short) var(--anim-ease-out);
+  box-shadow: var(--premium-glow-accent), var(--premium-shadow-sm);
+}
+
+@keyframes checkmarkPulse {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ===== FORM STATES ===== */
+/* Success/Error messages */
+.success-message, .error-message {
+  animation: messageSlideIn var(--anim-duration-base) var(--anim-ease-out);
+}
+
+@keyframes messageSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Loading skeleton (for auth states) */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loadingShimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loadingShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== TABLE & LIST ENHANCEMENTS ===== */
+.users-table tbody tr:hover {
+  transform: scale(1.01);
+  box-shadow: var(--premium-shadow-lg);
+}
+
+.nav-item:hover {
+  box-shadow: inset 4px 0 0 var(--premium-primary);
+}
+
+/* ===== MODAL ENHANCEMENTS ===== */
+.modal-overlay {
+  animation: modalBackdropFade var(--anim-duration-med) var(--anim-ease-out);
+}
+
+@keyframes modalBackdropFade {
+  from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+  to { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+}
+
+.modal-content {
+  animation: modalBounceIn var(--anim-duration-med) var(--anim-ease-out);
+}
+
+@keyframes modalBounceIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+  60% { opacity: 1; transform: scale(1.02) translateY(-5px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* ===== RESPONSIVE PRIORITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --premium-glow-primary: 0 0 0 4px rgb(99 102 241 / 0.4);
+  }
+}
+
+/* Print optimizations */
+@media print {
+  .modal-overlay, button, .sidebar { display: none !important; }
+}
+
