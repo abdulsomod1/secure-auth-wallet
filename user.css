@@ -348,7 +348,7 @@ body {
 
 .balance-amount #total-balance {
     font-size: 3.2rem;
-    font-weight: 700;
+    font-weight: 600;
     background: linear-gradient(135deg, #1a202c 0%, #4a5568 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -418,7 +418,6 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
     opacity: 0;
     transition: opacity 0.4s ease;
 }
@@ -451,10 +450,6 @@ box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0
         0 0 30px rgba(59, 130, 246, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
-.send-btn i {
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-}
 .send-btn:hover i {
     transform: scale(1.15) rotateY(10deg);
 }
@@ -469,10 +464,6 @@ box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0
         0 20px 50px rgba(16, 185, 129, 0.4),
         0 0 30px rgba(16, 185, 129, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-.receive-btn i {
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 .receive-btn:hover i {
     animation: receivePulse 0.6s ease-in-out;
@@ -493,10 +484,6 @@ box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0
         0 0 30px rgba(245, 158, 11, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
-.buy-btn i {
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-}
 .buy-btn:hover i {
     transform: rotate(90deg) scale(1.2);
 }
@@ -511,10 +498,6 @@ box-shadow: \n        0 12px 40px rgba(0, 191, 255, 0.3),\n        inset 0 1px 0
         0 20px 50px rgba(139, 92, 246, 0.4),
         0 0 30px rgba(139, 92, 246, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-.swap-btn i {
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 .swap-btn:hover i {
     animation: swap360 0.8s linear;
@@ -539,10 +522,6 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
         0 25px 60px rgba(59, 130, 246, 0.4),
         0 0 40px rgba(16, 185, 129, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-.swap-and-send-btn i {
-    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2));
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 @keyframes gradientShiftBg {
     0% { background-position: 0% 50%; }
