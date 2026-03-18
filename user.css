@@ -221,6 +221,12 @@ body {
     color: white;
 }
 
+#welcome-message {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+}
+
 .user-avatar {
     width: 60px;
     height: 60px;
@@ -400,6 +406,12 @@ body {
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    color: white;
+}
+
+.action-btn span {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .action-btn::before {
@@ -682,11 +694,9 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 .portfolio-section h2 {
     font-size: 1.8rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     margin-bottom: 25px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .portfolio-list {
