@@ -5,23 +5,23 @@
 
 /* ===== ROOT VARIABLES - Modern SaaS Palette ===== */
 :root {
-  --premium-primary: #6366f1; /* Indigo 500 */
-  --premium-accent: #10b981; /* Emerald 500 */
-  --premium-success: #059669; /* Emerald 600 */
-  --premium-warning: #d97706; /* Amber 600 */
-  --premium-error: #dc2626; /* Red 600 */
-  --premium-bg-glass: rgba(255, 255, 255, 0.85);
+  --premium-primary: white; /* Cyan neon */
+  --premium-accent: white;
+  --premium-success: #059669;
+  --premium-warning: #d97706;
+  --premium-error: #dc2626;
+  --premium-bg-glass: var(--glass-deep);
   --premium-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --premium-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --premium-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --premium-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --premium-glow-primary: 0 0 0 3px rgb(99 102 241 / 0.2);
-  --premium-glow-accent: 0 0 0 3px rgb(16 185 129 / 0.2);
+  --premium-glow-primary: 0 0 0 4px rgb(6 182 212 / 0.4), 0 0 30px rgb(6 182 212 / 0.3);
+  --premium-glow-accent: 0 0 0 4px rgb(6 182 212 / 0.4);
   --anim-duration-short: 0.15s;
-  --anim-duration-base: 0.2s;
-  --anim-duration-med: 0.3s;
-  --anim-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --anim-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-duration-base: 0.4s;
+  --anim-duration-med: 0.4s;
+  --anim-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --anim-ease-in-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* ===== GLOBAL TYPOGRAPHY OVERRIDE ===== */

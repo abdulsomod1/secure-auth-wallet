@@ -1,11 +1,12 @@
-# Revert Action Buttons to Balance Card - Implementation Steps
+# Color Change Task: deepskyblue to darkblue in user.css
 
-## Plan Breakdown (Approved by User):
-1. [x] Edit user.html: Remove .action-section, move .quick-actions inside .balance-card
-2. [x] Edit user.css: Remove .action-section styles completely
-3. [x] Edit TODO-buttons-redesign-steps.md: Mark as reverted
-4. [x] Test layout and functionality
-5. [x] attempt_completion
+**Status: In Progress**
 
-**Current Progress:** Starting Step 1
-
+## Steps:
+- [x] Analyze user.html (no changes needed)
+- [x] Analyze user.css (deepskyblue found in body, sidebar, buttons)
+- [ ] Confirm plan with user
+- [ ] Edit user.css: replace all deepskyblue → darkblue
+- [ ] Verify changes
+- [ ] Test in browser
+- [ ] Mark complete

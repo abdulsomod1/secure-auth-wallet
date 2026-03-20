@@ -105,13 +105,13 @@ body {
 
 .logo i {
     font-size: 3rem;
-    color: #4facfe;
+    color: grey;
 }
 
 .logo h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    background: linear-gradient(45deg, grey, grey);
     -webkit-background-clip: text;
     background-clip: text;
 }
@@ -135,7 +135,7 @@ body {
 }
 
 .card-header {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     padding: 0;
 }
 
@@ -214,7 +214,7 @@ body {
 }
 
 .input-group label i {
-    color: #4facfe;
+    color: grey;
     width: 16px;
 }
 
@@ -231,7 +231,7 @@ body {
 
 .input-group input:focus {
     outline: none;
-    border-color: #4facfe;
+    border-color: grey;
     background: white;
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
@@ -271,8 +271,8 @@ body {
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: #4facfe;
-    border-color: #4facfe;
+    background: grey;
+    border-color: grey;
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
@@ -286,7 +286,7 @@ body {
 }
 
 .forgot-link {
-    color: #4facfe;
+    color: grey;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -294,7 +294,7 @@ body {
 }
 
 .forgot-link:hover {
-    color: #00f2fe;
+    color: grey;
     text-decoration: underline;
 }
 
@@ -329,8 +329,8 @@ body {
 }
 
 .terms .checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    border-color: #4facfe;
+    background: linear-gradient(135deg, grey 0%, grey 100%);
+    border-color: grey;
 }
 
 .terms .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
@@ -360,14 +360,14 @@ body {
 }
 
 .link:hover {
-    color: #00f2fe;
+    color: grey;
     text-decoration: underline;
 }
 
 .auth-btn {
     width: 100%;
     padding: 16px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -379,7 +379,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .auth-btn:hover {
@@ -422,7 +422,7 @@ body {
 
 .feature i {
     font-size: 2rem;
-    color: #4facfe;
+    color: grey;
 }
 
 .feature span {
@@ -668,9 +668,9 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .btn-primary:hover {

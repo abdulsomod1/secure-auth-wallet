@@ -9,7 +9,7 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: deepskyblue;
+    background: grey;
     background-attachment: fixed;
     color: #1a202c;
     line-height: 1.6;
@@ -42,7 +42,7 @@ body {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1.2rem;
-    color: #4facfe;
+    color: grey;
 }
 
 .mobile-menu-btn:hover {
@@ -54,7 +54,7 @@ body {
 /* ===== SIDEBAR ===== */
 .sidebar {
     width: 280px;
-    background: deepskyblue;
+    background: grey;
     backdrop-filter: blur(25px) saturate(180%);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
@@ -87,7 +87,7 @@ body {
 .sidebar-header .logo i {
     color: black;
     font-size: 1.8rem;
-    filter: drop-shadow(0 2px 4px rgba(79, 172, 254, 0.3));
+    filter: drop-shadow(0 2px 4px grey);
 }
 
 .nav-menu {
@@ -95,7 +95,7 @@ body {
     padding: 20px 0;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(79, 172, 254, 0.3) transparent;
+    scrollbar-color: grey transparent;
 }
 
 .nav-item {
@@ -113,14 +113,14 @@ body {
 
 .nav-item:hover {
     background: linear-gradient(135deg, rgba(79, 172, 254, 0.08) 0%, rgba(0, 242, 254, 0.08) 100%);
-    color: #4facfe;
+    color: grey;
     transform: translateX(4px);
 }
 
 .nav-item.active {
     background: linear-gradient(135deg, rgba(79, 172, 254, 0.12) 0%, rgba(0, 242, 254, 0.12) 100%);
     color: white;
-    border-left-color: #4facfe;
+    border-left-color: grey;
     box-shadow: inset 0 1px 0 rgba(79, 172, 254, 0.1);
 }
 
@@ -174,7 +174,7 @@ body {
     padding: 30px;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(79, 172, 254, 0.3) transparent;
+    scrollbar-color: white;
 }
 
 .section {
@@ -269,7 +269,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #4facfe 100%);
+    background: linear-gradient(90deg, grey 0%, grey 50%, grey 100%);
     background-size: 200% 100%;
     animation: gradientShift 3s ease infinite;
 }
@@ -297,7 +297,7 @@ body {
 .refresh-btn {
     background: none;
     border: none;
-    color: #4facfe;
+    color: grey;
     font-size: 1.3rem;
     cursor: pointer;
     padding: 10px;
@@ -440,7 +440,7 @@ body {
 
 /* ===== UNIQUE PROFESSIONAL BUTTON STYLES ===== */
 .send-btn {
-background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+background: grey;
 }
 .send-btn:hover {
     transform: translateY(-6px) scale(1.03);
@@ -454,7 +454,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .receive-btn {
-background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+background: grey;
 }
 .receive-btn:hover {
     transform: translateY(-6px) scale(1.03);
@@ -472,14 +472,14 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .buy-btn {
-background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+background: grey;
 }
 .buy-btn:hover i {
     transform: rotate(90deg) scale(1.2);
 }
 
 .swap-btn {
-background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+background: grey;
 }
 .swap-btn:hover {
     transform: translateY(-6px) rotateZ(180deg) scale(1.03);
@@ -493,7 +493,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .swap-and-send-btn {
-background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100%);
+background: gray;
     background-size: 300% 300%;
     animation: gradientShiftBg 4s ease infinite;
 }
@@ -800,7 +800,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .url-input:focus {
     outline: none;
-    border-color: #4facfe;
+    border-color: grey;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
     transform: translateY(-1px);
@@ -808,14 +808,14 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .load-btn {
     padding: 14px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .load-btn:hover {
@@ -867,14 +867,14 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .dapp-item:hover {
     background: linear-gradient(135deg, rgba(79, 172, 254, 0.08) 0%, rgba(0, 242, 254, 0.08) 100%);
-    color: #4facfe;
+    color: grey;
     transform: translateX(4px);
     box-shadow: 0 4px 15px rgba(79, 172, 254, 0.1);
 }
 
 .dapp-item i {
     width: 22px;
-    color: #4facfe;
+    color: grey;
     font-size: 1.1rem;
 }
 
@@ -916,7 +916,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .filter-select:focus {
     outline: none;
-    border-color: #4facfe;
+    border-color: grey;
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
     transform: translateY(-1px);
 }
@@ -1037,7 +1037,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #4facfe 100%);
+    background: linear-gradient(90deg, grey 0%, grey 50%, grey 100%);
     background-size: 200% 100%;
     animation: gradientShift 3s ease infinite;
 }
@@ -1062,8 +1062,8 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .support-icon i {
     font-size: 2rem;
-    color: #4facfe;
-    filter: drop-shadow(0 2px 4px rgba(79, 172, 254, 0.3));
+    color: grey;
+    filter: drop-shadow(0 2px 4px grey);
 }
 
 .support-card h3 {
@@ -1082,18 +1082,18 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .support-link {
     display: inline-block;
-    color: #4facfe;
+    color: grey;
     text-decoration: none;
     font-weight: 600;
     padding: 10px 20px;
-    border: 2px solid rgba(79, 172, 254, 0.3);
+    border: 2px solid grey;
     border-radius: 25px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
 }
 
 .support-link:hover {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
@@ -1101,7 +1101,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .support-btn {
     padding: 12px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 25px;
@@ -1109,7 +1109,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     font-weight: 600;
     font-size: 0.95rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .support-btn:hover {
@@ -1169,7 +1169,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #4facfe;
+    border-color: grey;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
     transform: translateY(-1px);
@@ -1177,7 +1177,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .submit-btn {
     padding: 16px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -1185,7 +1185,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
     margin-top: 10px;
 }
 
@@ -1233,7 +1233,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .faq-item h3:hover {
-    color: #4facfe;
+    color: grey;
 }
 
 .faq-item p {
@@ -1275,7 +1275,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 50%, #4facfe 100%);
+    background: linear-gradient(90deg, grey 0%, grey 50%, grey 100%);
     background-size: 200% 100%;
     animation: gradientShift 3s ease infinite;
 }
@@ -1290,8 +1290,8 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .app-logo i {
     font-size: 4rem;
-    color: #4facfe;
-    filter: drop-shadow(0 4px 8px rgba(79, 172, 254, 0.3));
+    color: grey;
+    filter: drop-shadow(0 4px 8px grey);
 }
 
 .app-logo h2 {
@@ -1318,7 +1318,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
     border: 1px solid rgba(79, 172, 254, 0.2);
     border-radius: 20px;
-    color: #4facfe;
+    color: grey;
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -1366,9 +1366,9 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .feature-item i {
     font-size: 2.5rem;
-    color: #4facfe;
+    color: grey;
     margin-bottom: 20px;
-    filter: drop-shadow(0 2px 4px rgba(79, 172, 254, 0.3));
+    filter: drop-shadow(0 2px 4px grey);
 }
 
 .feature-item h3 {
@@ -1421,18 +1421,18 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #4facfe;
+    color: grey;
     text-decoration: none;
     font-weight: 600;
     padding: 12px 20px;
-    border: 2px solid rgba(79, 172, 254, 0.3);
+    border: 2px solid grey;
     border-radius: 25px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
 }
 
 .contact-link:hover {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
@@ -1470,11 +1470,11 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .legal-link {
     display: block;
-    color: #4facfe;
+    color: grey;
     text-decoration: none;
     font-weight: 600;
     padding: 12px 20px;
-    border: 2px solid rgba(79, 172, 254, 0.3);
+    border: 2px solid grey;
     border-radius: 12px;
     text-align: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1482,7 +1482,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .legal-link:hover {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
@@ -1567,7 +1567,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -1575,7 +1575,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
     font-size: 0.95rem;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .setting-btn:hover {
@@ -1624,8 +1624,8 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 }
 
 .toggle input:checked + .toggle-slider {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
+    box-shadow: 0 0 10px grey;
 }
 
 .toggle input:checked + .toggle-slider:before {
@@ -1722,7 +1722,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     align-items: center;
     gap: 16px;
     padding: 20px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 16px;
@@ -1730,7 +1730,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
     font-size: 1rem;
-    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 8px 25px grey;
     position: relative;
     overflow: hidden;
     text-align: left;
@@ -1949,7 +1949,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #4facfe;
+    border-color: grey;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
     transform: translateY(-1px);
@@ -1957,7 +1957,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .action-submit-btn {
     padding: 16px 24px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, grey 0%, grey 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -1965,7 +1965,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px grey;
 }
 
 .action-submit-btn:hover {
@@ -1988,8 +1988,8 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
 .qr-code i {
     font-size: 4rem;
-    color: #4facfe;
-    filter: drop-shadow(0 2px 4px rgba(79, 172, 254, 0.3));
+    color: grey;
+    filter: drop-shadow(0 2px 4px grey);
 }
 
 .address-display {
@@ -2041,7 +2041,7 @@ background: linear-gradient(135deg, deepskyblue 0%, #00bfff 50%, deepskyblue 100
 
     .sidebar.active {
         transform: translateX(0);
-        background-color: deepskyblue;
+        background-color: grey;
     }
 
     .main-content {
