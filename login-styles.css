@@ -6,13 +6,19 @@
     box-sizing: border-box;
 }
 
+#logo {
+    color: grey;
+}
+
 body {
     font-family: 'Inter', sans-serif;
-    background: deepskyblue;
+    background: grey;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
 }
+
+
 
 .background {
     position: fixed;
@@ -341,7 +347,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: grey;
     font-size: 11px;
 }
 
@@ -384,7 +390,7 @@ body {
 
 .auth-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+    box-shadow: 0 8px 25px grey;
 }
 
 .auth-btn:active {
@@ -422,7 +428,7 @@ body {
 
 .feature i {
     font-size: 2rem;
-    color: grey;
+    color: white;
 }
 
 .feature span {
@@ -675,7 +681,7 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    box-shadow: 0 6px 20px grey;
 }
 
 .btn-secondary {
