@@ -608,7 +608,7 @@ background: gray;
     border-radius: 50% !important;
     padding: 0 !important;
     margin: 0 !important;
-    border: 2px solid rgba(255,255,255,0.4) !important;
+    border: 2px solid #FFF446 !important;
     background: #FFF446;  
 }
   
@@ -655,9 +655,7 @@ background: gray;
     gap: 0 !important;
   }
   
-  #display-n2 {
-    display: none !important;
-  }
+  /* Removed conflicting display: none for PC buttons (#display-n2) */
   
   /* Extra small phones */
   @media (max-width: 360px) {
@@ -2077,12 +2075,32 @@ background: gray;
     }
 
     /* Desktop */
-    @media (min-width: 1025px) {
+@media (min-width: 1025px) {
         #display-n {
             display: none;
         }
         #display-n2 {
-            display: flex;
+            display: flex !important;
+        }
+        #display-n2 .action-btn {
+            background: #FFF446 !important;
+            border: 2px solid rgba(255,255,255,0.4) !important;
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        #display-n2 .quick-actions {
+            gap: 8px !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+        }
+        #display-n2 span {
+            display: none !important;
         }
     }
 
