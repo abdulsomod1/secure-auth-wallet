@@ -7,12 +7,12 @@
 }
 
 #logo {
-    color: grey;
+    color: black;
 }
 
 body {
     font-family: 'Inter', sans-serif;
-    background: grey;
+    background: black;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
@@ -111,13 +111,13 @@ body {
 
 .logo i {
     font-size: 3rem;
-    color: grey;
+    color: black;
 }
 
 .logo h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(45deg, grey, grey);
+    background: linear-gradient(45deg, black, black);
     -webkit-background-clip: text;
     background-clip: text;
 }
@@ -141,7 +141,7 @@ body {
 }
 
 .card-header {
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     padding: 0;
 }
 
@@ -220,7 +220,7 @@ body {
 }
 
 .input-group label i {
-    color: grey;
+    color: black;
     width: 16px;
 }
 
@@ -237,7 +237,7 @@ body {
 
 .input-group input:focus {
     outline: none;
-    border-color: grey;
+    border-color: black;
     background: white;
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
@@ -277,8 +277,8 @@ body {
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: grey;
-    border-color: grey;
+    background: black;
+    border-color: black;
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
@@ -292,7 +292,7 @@ body {
 }
 
 .forgot-link {
-    color: grey;
+    color: black;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -300,7 +300,7 @@ body {
 }
 
 .forgot-link:hover {
-    color: grey;
+    color: black;
     text-decoration: underline;
 }
 
@@ -335,8 +335,8 @@ body {
 }
 
 .terms .checkbox-container input[type="checkbox"]:checked + .checkmark {
-    background: linear-gradient(135deg, grey 0%, grey 100%);
-    border-color: grey;
+    background: linear-gradient(135deg, black 0%, black 100%);
+    border-color: black;
 }
 
 .terms .checkbox-container input[type="checkbox"]:checked + .checkmark::after {
@@ -347,7 +347,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: grey;
+    color: black;
     font-size: 11px;
 }
 
@@ -366,14 +366,14 @@ body {
 }
 
 .link:hover {
-    color: grey;
+    color: black;
     text-decoration: underline;
 }
 
 .auth-btn {
     width: 100%;
     padding: 16px 24px;
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -385,12 +385,12 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 15px grey;
+    box-shadow: 0 4px 15px black;
 }
 
 .auth-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px grey;
+    box-shadow: 0 8px 25px black;
 }
 
 .auth-btn:active {
@@ -674,14 +674,14 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
-    box-shadow: 0 4px 15px grey;
+    box-shadow: 0 4px 15px black;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px grey;
+    box-shadow: 0 6px 20px black;
 }
 
 .btn-secondary {

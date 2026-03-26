@@ -31,7 +31,7 @@
 }
 
 .sidebar-header .logo i {
-    color: grey;
+    color: black;
     font-size: 1.8rem;
 }
 
@@ -53,13 +53,13 @@
 
 .nav-item:hover {
     background: rgba(79, 172, 254, 0.1);
-    color: grey;
+    color: black;
 }
 
 .nav-item.active {
     background: rgba(79, 172, 254, 0.15);
-    color: grey;
-    border-left-color: grey;
+    color: black;
+    border-left-color: black;
 }
 
 .nav-item i {
@@ -170,7 +170,7 @@
 .refresh-btn {
     background: none;
     border: none;
-    color: grey;
+    color: black;
     font-size: 1.2rem;
     cursor: pointer;
     padding: 8px;
@@ -232,7 +232,7 @@
     align-items: center;
     gap: 8px;
     padding: 20px 15px;
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -244,7 +244,7 @@
 
 .action-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px grey;
+    box-shadow: 0 10px 25px black;
 }
 
 .action-btn i {
@@ -377,13 +377,13 @@
 
 .url-input:focus {
     outline: none;
-    border-color: grey;
+    border-color: black;
     background: white;
 }
 
 .load-btn {
     padding: 12px 20px;
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
     border: none;
     border-radius: 25px;
@@ -393,7 +393,7 @@
 
 .load-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px grey;
+    box-shadow: 0 5px 15px black;
 }
 
 .dapp-container {
@@ -436,12 +436,12 @@
 
 .dapp-item:hover {
     background: rgba(79, 172, 254, 0.1);
-    color: grey;
+    color: black;
 }
 
 .dapp-item i {
     width: 20px;
-    color: grey;
+    color: black;
 }
 
 .dapp-browser {
@@ -476,7 +476,7 @@
 
 .filter-select:focus {
     outline: none;
-    border-color: grey;
+    border-color: black;
 }
 
 .nft-grid {
@@ -603,7 +603,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -614,7 +614,7 @@
 
 .setting-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px grey;
+    box-shadow: 0 5px 15px black;
 }
 
 .toggle {
@@ -655,7 +655,7 @@
 }
 
 .toggle input:checked + .toggle-slider {
-    background: grey;
+    background: black;
 }
 
 .toggle input:checked + .toggle-slider:before {
@@ -690,7 +690,7 @@
 
 .form-group input:focus, .form-group select:focus {
     outline: none;
-    border-color: grey;
+    border-color: black;
     background: white;
 }
 
@@ -709,7 +709,7 @@
 
 .action-submit-btn {
     padding: 14px 24px;
-    background: linear-gradient(135deg, grey 0%, grey 100%);
+    background: linear-gradient(135deg, black 0%, black 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -721,7 +721,7 @@
 
 .action-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px grey;
+    box-shadow: 0 5px 15px black;
 }
 
 .qr-code {
@@ -738,7 +738,7 @@
 
 .qr-code i {
     font-size: 4rem;
-    color: grey;
+    color: black;
 }
 
 .address-display {
@@ -890,7 +890,15 @@
     }
 
     .balance-card {
-        padding: 20px;
+        padding: 35px;
+        margin-bottom: 35px;
+        backdrop-filter: blur(25px) saturate(180%);
+        position: relative;
+        background: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
     }
 
     .balance-amount #total-balance {

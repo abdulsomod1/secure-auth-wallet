@@ -465,20 +465,25 @@ async function initializeUserData() {
     setupLivePriceUpdates(); // Start live price updates for ongoing updates
 }
 
-// Eye icon toggle functionality
-const eyeIcon = document.getElementById('eye-icon');
-
-eyeIcon.addEventListener('click', () => {
-    balanceVisible = !balanceVisible;
-    updateBalance();
-
-    // Update icon
-    if (balanceVisible) {
-        eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
-    } else {
-        eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
-    }
+// Eye icon toggle functionality - SUPPORTS MULTIPLE ICONS
+document.querySelectorAll('.eye-toggle').forEach(eyeIcon => {
+    eyeIcon.addEventListener('click', () => {
+        balanceVisible = !balanceVisible;
+        updateBalance();
+        updateEyeIcons();
+    });
 });
+
+// Update all eye icons after toggle
+function updateEyeIcons() {
+    document.querySelectorAll('.eye-toggle').forEach(eyeIcon => {
+        if (balanceVisible) {
+            eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
+        } else {
+            eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        }
+    });
+}
 
 // Function to update welcome message with username
 async function updateWelcomeMessage() {
@@ -513,17 +518,18 @@ async function updateWelcomeMessage() {
     }
 }
 
-    // Initialize on page load
+    // MAIN INITIALIZATION - Consolidated DOMContentLoaded (moved wizard init here)
     document.addEventListener('DOMContentLoaded', () => {
-        // Disable scroll restoration to ensure page always starts at top
+        console.log('✓ Main DOMContentLoaded - full app init');
+        
+        // Disable scroll restoration
         history.scrollRestoration = 'manual';
-        // Scroll to top on page load
         window.scrollTo(0, 0);
 
+        // Core app initialization
         if (window.supabaseClient) {
             initializeUserData();
         } else {
-            // Wait for Supabase client to be initialized
             const checkSupabase = setInterval(() => {
                 if (window.supabaseClient) {
                     clearInterval(checkSupabase);
@@ -532,63 +538,52 @@ async function updateWelcomeMessage() {
             }, 100);
         }
 
-        // Update welcome message
         updateWelcomeMessage();
 
-    // Add focus listener to refresh balance and portfolio when window regains focus
-    window.addEventListener('focus', async () => {
-        await loadUserPortfolio();
-        await calculateTotalBalance();
-        updateBalance();
-        updatePortfolio();
-    });
+        // Bank wizard init (late/ safe)
+        setTimeout(() => {
+            populateBanks();
+            initBankWizard();
+        }, 100);
 
-    // Periodic refresh every 30 seconds to keep balance updated
-    setInterval(async () => {
-        await loadUserPortfolio();
-        await calculateTotalBalance();
-        updateBalance();
-        updatePortfolio();
-    }, 30000); // 30 seconds = 30000 milliseconds
+        // Focus refresh
+        window.addEventListener('focus', async () => {
+            await loadUserPortfolio();
+            await calculateTotalBalance();
+            updateBalance();
+            updatePortfolio();
+        });
 
-    // Prevent back button from navigating away from dashboard
-    window.history.pushState(null, null, window.location.href);
-    window.addEventListener('popstate', function(event) {
-        // Prevent going back
+        // Periodic refresh
+        setInterval(async () => {
+            await loadUserPortfolio();
+            await calculateTotalBalance();
+            updateBalance();
+            updatePortfolio();
+        }, 30000);
+
+        // Back button prevention
         window.history.pushState(null, null, window.location.href);
-
-        // First, check if action modal is open, close it
-        if (actionModal && actionModal.classList.contains('show')) {
-            actionModal.classList.remove('show');
-            return;
-        }
-
-        // Switch to home section
-        const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
-        if (homeNavItem) {
-            // Remove active class from all nav items
-            navItems.forEach(nav => nav.classList.remove('active'));
-
-            // Add active class to home nav item
-            homeNavItem.classList.add('active');
-
-            // Hide all sections
-            sections.forEach(section => section.classList.remove('active'));
-
-            // Show the home section
-            const homeSection = document.getElementById('home-section');
-            if (homeSection) {
-                homeSection.classList.add('active');
+        window.addEventListener('popstate', function(event) {
+            window.history.pushState(null, null, window.location.href);
+            if (actionModal && actionModal.classList.contains('show')) {
+                actionModal.classList.remove('show');
+                return;
             }
-
-            // Close sidebar on mobile when switching to home
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
+            const homeNavItem = document.querySelector('.nav-item[data-section="home"]');
+            if (homeNavItem) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                homeNavItem.classList.add('active');
+                sections.forEach(section => section.classList.remove('active'));
+                const homeSection = document.getElementById('home-section');
+                if (homeSection) homeSection.classList.add('active');
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                }
             }
-        }
+        });
     });
-});
 
 // ===== DAPP BROWSER FUNCTIONALITY =====
 
@@ -1150,11 +1145,12 @@ async function loadUserProfilePicture() {
 
 // ===== ACTION MODALS FUNCTIONALITY =====
 
-// Action buttons
-const sendBtn = document.querySelector('.send-btn');
-const receiveBtn = document.querySelector('.receive-btn');
-const buyBtn = document.querySelector('.buy-btn');
-const swapBtn = document.querySelector('.swap-btn');
+// Action buttons - TOP & BOTTOM (mobile)
+const sendBtns = document.querySelectorAll('.action-btn.send-btn');
+const receiveBtns = document.querySelectorAll('.action-btn.receive-btn');
+const buyBtns = document.querySelectorAll('.action-btn.buy-btn');
+const swapBtns = document.querySelectorAll('.action-btn.swap-btn');
+const swapAndSendBtns = document.querySelectorAll('.action-btn.swap-and-send-btn');
 
 // Modal elements
 const actionModal = document.getElementById('action-modal');
@@ -1165,46 +1161,54 @@ const receiveForm = document.getElementById('receive-form');
 const sendSubmitBtn = document.getElementById('send-submit');
 const copyAddressBtn = document.getElementById('copy-address');
 
-// Send button
-sendBtn.addEventListener('click', () => {
-    actionModalTitle.textContent = 'Send Crypto';
-    sendForm.style.display = 'block';
-    receiveForm.style.display = 'none';
-    actionModal.classList.add('show');
+// Send buttons (top & bottom)
+sendBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        actionModalTitle.textContent = 'Send Crypto';
+        sendForm.style.display = 'block';
+        receiveForm.style.display = 'none';
+        actionModal.classList.add('show');
+    });
 });
 
-// Receive button
-receiveBtn.addEventListener('click', () => {
-    actionModalTitle.textContent = 'Receive Crypto';
-    sendForm.style.display = 'none';
-    receiveForm.style.display = 'block';
-    // Set initial address for BNB
-    walletAddressDisplay.textContent = walletAddresses['BNB'];
-    receiveCurrencySelect.value = 'BNB';
-    generateQR('BNB');
-    actionModal.classList.add('show');
+// Receive buttons (top & bottom)
+receiveBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        actionModalTitle.textContent = 'Receive Crypto';
+        sendForm.style.display = 'none';
+        receiveForm.style.display = 'block';
+        // Set initial address for BNB
+        walletAddressDisplay.textContent = walletAddresses['BNB'];
+        receiveCurrencySelect.value = 'BNB';
+        generateQR('BNB');
+        actionModal.classList.add('show');
+    });
 });
 
-// Buy button
-buyBtn.addEventListener('click', () => {
-    loadDApp('https://www.kraken.com/buy');
-    // Switch to DApp section
-    const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
-    navItems.forEach(nav => nav.classList.remove('active'));
-    dappNavItem.classList.add('active');
-    sections.forEach(section => section.classList.remove('active'));
-    document.getElementById('dapp-section').classList.add('active');
+// Buy buttons (top & bottom)
+buyBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        loadDApp('https://www.kraken.com/buy');
+        // Switch to DApp section
+        const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
+        navItems.forEach(nav => nav.classList.remove('active'));
+        dappNavItem.classList.add('active');
+        sections.forEach(section => section.classList.remove('active'));
+        document.getElementById('dapp-section').classList.add('active');
+    });
 });
 
-// Swap button
-swapBtn.addEventListener('click', () => {
-    loadDApp('https://uniswap.org/');
-    // Switch to DApp section
-    const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
-    navItems.forEach(nav => nav.classList.remove('active'));
-    dappNavItem.classList.add('active');
-    sections.forEach(section => section.classList.remove('active'));
-    document.getElementById('dapp-section').classList.add('active');
+// Swap buttons (top & bottom)
+swapBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        loadDApp('https://uniswap.org/');
+        // Switch to DApp section
+        const dappNavItem = document.querySelector('.nav-item[data-section="dapp"]');
+        navItems.forEach(nav => nav.classList.remove('active'));
+        dappNavItem.classList.add('active');
+        sections.forEach(section => section.classList.remove('active'));
+        document.getElementById('dapp-section').classList.add('active');
+    });
 });
 
 // Close modal
@@ -1332,6 +1336,284 @@ copyAddressBtn.addEventListener('click', () => {
     }).catch(() => {
         alert('Failed to copy address. Please copy manually: ' + address);
     });
+});
+
+// ===== SEND TO BANK WIZARD FUNCTIONALITY =====
+let bankWizardState = {
+    currentStep: 1,
+    selectedBank: null,
+    convertAmount: 0,
+    formData: {},
+    totalBalance: 0
+};
+
+// Safe DOM element getter
+function getElementSafe(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        console.error(`Missing DOM element: #${id}`);
+        return null;
+    }
+    return element;
+}
+
+function queryAllSafe(selector) {
+    const elements = document.querySelectorAll(selector);
+    if (elements.length === 0) {
+        console.error(`No elements found for selector: ${selector}`);
+    }
+    return elements;
+}
+
+// Banks list from requirements
+const banks = [
+    'Wells Fargo', 'HTMO BANK', 'CITI BANK', 'Citizen Bank', 'USA Bank',
+    'USAA BANK', 'CU BANK', 'Community Bank', 'Huntington Bank', 
+    'BMO Harris Bank', 'Santander Bank', 'M&T Bank', 'Truist Bank',
+    'Key Bank', 'TD Bank', 'Regions Bank'
+];
+
+// Init bank wizard
+function initBankWizard() {
+    const sendToBankBtns = document.querySelectorAll('.action-btn.swap-and-send-btn');
+    sendToBankBtns.forEach(sendToBankBtn => {
+        sendToBankBtn.addEventListener('click', () => {
+            console.log('Send to bank clicked');
+            bankWizardState.totalBalance = (typeof currentBalance !== 'undefined' ? currentBalance : 0) || 0;
+            bankWizardState.currentStep = 1;
+            
+            const availableEl = getElementSafe('available-balance');
+            if (availableEl) {
+                availableEl.textContent = formatNumberWithCommas(bankWizardState.totalBalance.toFixed(2));
+            }
+            
+            showBankWizardStep(1);
+        });
+    });
+    console.log('✓ Send to bank handlers attached to all buttons');
+}
+
+// Show specific wizard step - NULL SAFE
+function showBankWizardStep(step) {
+    console.log(`Showing wizard step: ${step}`);
+    
+    const modal = getElementSafe('bank-wizard-modal');
+    if (!modal) return;
+    
+    const steps = queryAllSafe('.wizard-step');
+    const indicator = getElementSafe('step-indicator');
+    const progressFill = getElementSafe('progress-fill');
+
+    // Hide all steps safely
+    steps.forEach(s => {
+        if (s.classList) s.classList.remove('active');
+    });
+    
+    // Show current step safely
+    const currentStepEl = getElementSafe(`step${step}`);
+    if (currentStepEl && currentStepEl.classList) {
+        currentStepEl.classList.add('active');
+    } else {
+        console.error(`Step ${step} element not found`);
+        return;
+    }
+    
+    // Update progress safely
+    bankWizardState.currentStep = step;
+    const progress = (step / 5) * 100;
+    if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+    }
+    if (indicator) {
+        indicator.textContent = `Step ${step} of 4`;
+    }
+
+    modal.style.display = 'flex';
+    if (modal.classList) {
+        modal.classList.add('show');
+    }
+}
+
+// Close wizard
+function closeBankWizard() {
+    document.getElementById('bank-wizard-modal').classList.remove('show');
+    setTimeout(() => {
+        document.getElementById('bank-wizard-modal').style.display = 'none';
+    }, 300);
+}
+
+// Get formatted total balance
+function getTotalBalance() {
+    return currentBalance || 0;
+}
+
+// Step 1 handlers - NULL SAFE
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'step1-cancel' || e.target.id === 'bank-wizard-close') {
+        const modal = getElementSafe('bank-wizard-modal');
+        if (modal) {
+            closeBankWizard();
+        }
+    }
+    if (e.target.id === 'step1-ok') {
+        showBankWizardStep(2);
+    }
+});
+
+// Step 2 handlers - Amount validation NULL SAFE
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'convert-amount') {
+        const amount = parseFloat(e.target.value) || 0;
+        const errorEl = getElementSafe('amount-error');
+        const nextBtn = getElementSafe('step2-next');
+        
+        if (!errorEl || !nextBtn) return;
+        
+        if (amount > getTotalBalance()) {
+            errorEl.textContent = 'Amount exceeds available balance';
+            errorEl.style.display = 'block';
+            nextBtn.disabled = true;
+        } else if (amount <= 0) {
+            errorEl.textContent = 'Amount must be greater than 0';
+            errorEl.style.display = 'block';
+            nextBtn.disabled = true;
+        } else {
+            errorEl.style.display = 'none';
+            nextBtn.disabled = false;
+            bankWizardState.convertAmount = amount;
+        }
+    }
+});
+
+// MAX button
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'max-balance-btn') {
+        const maxAmount = getTotalBalance();
+        document.getElementById('convert-amount').value = maxAmount.toFixed(2);
+        bankWizardState.convertAmount = maxAmount;
+        document.getElementById('step2-next').disabled = false;
+        document.getElementById('amount-error').style.display = 'none';
+    }
+});
+
+// Step 2 navigation NULL SAFE
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'step2-prev') {
+        showBankWizardStep(1);
+    }
+    if (e.target.id === 'step2-next') {
+        const nextBtn = getElementSafe('step2-next');
+        if (nextBtn && !nextBtn.disabled) {
+            showBankWizardStep(3);
+        }
+    }
+});
+
+// Step 3 - Bank selection
+function populateBanks() {
+    const grid = document.getElementById('bank-grid');
+    banks.forEach(bank => {
+        const div = document.createElement('div');
+        div.className = 'bank-option';
+        div.innerHTML = `
+            <input type="radio" name="bank" value="${bank}" id="bank-${bank.replace(/\s+/g, '-').toLowerCase()}">
+            <label for="bank-${bank.replace(/\s+/g, '-').toLowerCase()}">${bank}</label>
+        `;
+        grid.appendChild(div);
+    });
+
+    // Bank selection handler
+    grid.addEventListener('change', (e) => {
+        if (e.target.name === 'bank') {
+            bankWizardState.selectedBank = e.target.value;
+            document.getElementById('step3-next').disabled = false;
+            document.getElementById('bank-error').style.display = 'none';
+        }
+    });
+}
+
+// Step 3 navigation
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'step3-prev') showBankWizardStep(2);
+    if (e.target.id === 'step3-next' && bankWizardState.selectedBank) {
+        document.getElementById('bank-name').value = bankWizardState.selectedBank;
+        showBankWizardStep(4);
+    }
+});
+
+// Step 4 - Form validation
+function validateForm() {
+    const fields = {
+        name: document.getElementById('account-name').value.trim(),
+        routing: document.getElementById('routing-number').value.trim(),
+        account: document.getElementById('account-number').value.trim(),
+        type: document.getElementById('account-type').value,
+        address: document.getElementById('bank-address').value.trim()
+    };
+
+    let valid = true;
+    Object.keys(fields).forEach(key => {
+        const errorEl = document.querySelector(`[data-error="${key}"]`);
+        if (!fields[key]) {
+            errorEl.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)} is required`;
+            errorEl.style.display = 'block';
+            valid = false;
+        } else if (key === 'routing' && !/^\d{9}$/.test(fields.routing)) {
+            errorEl.textContent = 'Routing must be 9 digits';
+            errorEl.style.display = 'block';
+            valid = false;
+        } else if (key === 'account' && !/^\d+$/.test(fields.account)) {
+            errorEl.textContent = 'Account must be numeric';
+            errorEl.style.display = 'block';
+            valid = false;
+        } else {
+            errorEl.style.display = 'none';
+        }
+    });
+
+    bankWizardState.formData = fields;
+    return valid;
+}
+
+// Real-time form validation
+['account-name', 'routing-number', 'account-number', 'account-type', 'bank-address'].forEach(id => {
+    document.getElementById(id).addEventListener('input', validateForm);
+});
+
+// Step 4 navigation
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'step4-prev') showBankWizardStep(3);
+    if (e.target.id === 'step4-send') {
+        if (validateForm()) {
+            showBankWizardStep(5);
+        }
+    }
+});
+
+// Step 5 handlers
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'contact-support') {
+        window.location.href = 'mailto:support@yourapp.com?subject=Bank Transfer Issue&body=' + 
+            encodeURIComponent(`Bank: ${bankWizardState.selectedBank}\nAmount: $${bankWizardState.convertAmount}\n`);
+    }
+    if (e.target.id === 'step5-home') {
+        // Go to home section
+        const homeNav = document.querySelector('.nav-item[data-section="home"]');
+        homeNav.click();
+        closeBankWizard();
+    }
+});
+
+// SINGLE LATE DOMContentLoaded for WIZARD INIT - NULL SAFE
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded - initializing bank wizard');
+    try {
+        populateBanks();
+        initBankWizard();
+        console.log('✓ Bank wizard fully initialized');
+    } catch (error) {
+        console.error('Bank wizard init failed:', error);
+    }
 });
 
 // ===== LOGOUT FUNCTIONALITY =====

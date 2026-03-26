@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Mobile Menu Button -->
@@ -75,7 +77,11 @@
                 <!-- Total Balance -->
                 <div class="balance-card">
                     <div class="balance-header">
-                        <h2>Total Balance</h2>
+                        <h2 class="classT">Total Balance</h2>
+                        <button class="eye-icon eye-toggle eye-mobile good">
+                            <i class="fas fa-eye"></i>
+                        </button>
+
                         <div class="balance-refresh">
                             <button id="refresh-balance" class="refresh-btn">
                                 <i class="fas fa-sync-alt"></i>
@@ -84,12 +90,13 @@
                     </div>
                     <div class="balance-amount">
                         <span id="total-balance">....</span>
-                        <button id="eye-icon" class="eye-icon">
+                        <span class="balance-change" id="balance-change">+0.00%</span>
+                                                <button class="eye-icon eye-toggle eye-desktop">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <span class="balance-change" id="balance-change">+0.00%</span>
+
                     </div>
-                    <div class="quick-actions">
+                    <div id="display-n2" class="quick-actions">
                         <button class="action-btn send-btn">
                             <i class="fas fa-paper-plane"></i>
                             <span>Send</span>
@@ -110,6 +117,45 @@
                             <i class="fas fa-exchange-alt fa-paper-plane"></i>
                             <span>Send to bank</span>
                         </button>
+                    </div>
+                     <div id="display-n">
+                                        <div class="n-b">
+                        <button class="action-btn send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <span class="span-n">Send</span>
+                    </div>
+                    <div class="n-b">
+                        <button class="action-btn receive-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <span class="span-n">Receive</span>
+                    </div>
+                    <div class="n-b">
+
+                        <button class="action-btn buy-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <span id="span-b" class="span-n">Buy</span>
+                    </div>
+                    <div class="n-b">
+
+                        <button class="action-btn swap-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <span class="span-n">Swap</span>
+                    </div>
+                    <div class="n-b">
+
+                        <button class="action-btn swap-and-send-btn">
+                            <i class="fas fa-exchange-alt fa-paper-plane"></i>
+                        </button>
+                        <div>
+                            <span id="span-nn" class="span-n">Send</span>
+                            <span class="span-n"> to bank</span>
+
+                        </div>
+                </div>
                     </div>
                 </div>
 
@@ -158,7 +204,8 @@
                         <div class="portfolio-item">
                             <div class="coin-info">
                                 <div class="coin-icon">
-                                    <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH">
+                                    <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png"
+                                        alt="ETH">
                                 </div>
                                 <div class="coin-details">
                                     <h4>Ethereum</h4>
@@ -177,7 +224,8 @@
                         <div class="portfolio-item">
                             <div class="coin-info">
                                 <div class="coin-icon">
-                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png"
+                                        alt="USDT">
                                 </div>
                                 <div class="coin-details">
                                     <h4>Tether</h4>
@@ -215,7 +263,8 @@
                         <div class="portfolio-item">
                             <div class="coin-info">
                                 <div class="coin-icon">
-                                    <img src="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" alt="USDC">
+                                    <img src="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png"
+                                        alt="USDC">
                                 </div>
                                 <div class="coin-details">
                                     <h4>USD Coin</h4>
@@ -291,7 +340,8 @@
                     <!-- Sample NFTs -->
                     <div class="nft-card">
                         <div class="nft-image">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRmYWNmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsxPC90ZXh0Pjwvc3ZnPg==" alt="NFT 1">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRmYWNmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsxPC90ZXh0Pjwvc3ZnPg=="
+                                alt="NFT 1">
                         </div>
                         <div class="nft-info">
                             <h3>Crypto Punk #1234</h3>
@@ -304,7 +354,8 @@
                     </div>
                     <div class="nft-card">
                         <div class="nft-image">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwZjJmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsyPC90ZXh0Pjwvc3ZnPg==" alt="NFT 2">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwZjJmZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zZW0iPk5GVCsyPC90ZXh0Pjwvc3ZnPg=="
+                                alt="NFT 2">
                         </div>
                         <div class="nft-info">
                             <h3>Bored Ape #5678</h3>
@@ -449,7 +500,9 @@
                             </div>
                             <h3>Live Chat</h3>
                             <p>Chat with our support team in real-time during business hours.</p>
-                            <button class="support-btn" onclick="alert('Live chat is currently offline. Please use email support.')">Start Chat</button>
+                            <button class="support-btn"
+                                onclick="alert('Live chat is currently offline. Please use email support.')">Start
+                                Chat</button>
                         </div>
                         <div class="support-card">
                             <div class="support-icon">
@@ -477,7 +530,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="contact-message">Message</label>
-                                <textarea id="contact-message" rows="5" placeholder="Describe your issue or question..." required></textarea>
+                                <textarea id="contact-message" rows="5" placeholder="Describe your issue or question..."
+                                    required></textarea>
                             </div>
                             <button type="submit" class="submit-btn">Send Message</button>
                         </form>
@@ -487,23 +541,28 @@
                         <h2>Frequently Asked Questions</h2>
                         <div class="faq-item">
                             <h3>How do I reset my password?</h3>
-                            <p>You can reset your password by clicking "Forgot Password" on the login page. Follow the instructions sent to your email.</p>
+                            <p>You can reset your password by clicking "Forgot Password" on the login page. Follow the
+                                instructions sent to your email.</p>
                         </div>
                         <div class="faq-item">
                             <h3>How do I backup my wallet?</h3>
-                            <p>Go to Settings > Wallet Management > Backup Recovery Phrase. Write down your 12-word recovery phrase and store it securely.</p>
+                            <p>Go to Settings > Wallet Management > Backup Recovery Phrase. Write down your 12-word
+                                recovery phrase and store it securely.</p>
                         </div>
                         <div class="faq-item">
                             <h3>What cryptocurrencies are supported?</h3>
-                            <p>Currently supported: Bitcoin (BTC), Ethereum (ETH), Binance Coin (BNB), and Tether (USDT). More tokens coming soon!</p>
+                            <p>Currently supported: Bitcoin (BTC), Ethereum (ETH), Binance Coin (BNB), and Tether
+                                (USDT). More tokens coming soon!</p>
                         </div>
                         <div class="faq-item">
                             <h3>How do I add a custom token?</h3>
-                            <p>Go to Settings > Networks & Tokens > Add Custom Token. Enter the contract address, symbol, and decimals.</p>
+                            <p>Go to Settings > Networks & Tokens > Add Custom Token. Enter the contract address,
+                                symbol, and decimals.</p>
                         </div>
                         <div class="faq-item">
                             <h3>Is my wallet secure?</h3>
-                            <p>Yes, we use industry-standard encryption and security measures. Always enable 2FA and backup your recovery phrase.</p>
+                            <p>Yes, we use industry-standard encryption and security measures. Always enable 2FA and
+                                backup your recovery phrase.</p>
                         </div>
                     </div>
                 </div>
@@ -521,8 +580,10 @@
                             <h2>SecureWallet</h2>
                         </div>
                         <p class="app-description">
-                            SecureWallet is your trusted companion for managing cryptocurrencies. With cutting-edge security features,
-                            intuitive design, and comprehensive functionality, we make crypto management simple and secure.
+                            SecureWallet is your trusted companion for managing cryptocurrencies. With cutting-edge
+                            security features,
+                            intuitive design, and comprehensive functionality, we make crypto management simple and
+                            secure.
                         </p>
                         <div class="app-version">
                             <span>Version 1.0.0</span>
@@ -568,8 +629,10 @@
                     <div class="company-info">
                         <h2>About Us</h2>
                         <p>
-                            Founded in 2024, SecureWallet is committed to making cryptocurrency accessible and secure for everyone.
-                            Our mission is to provide a user-friendly platform that combines advanced security with intuitive design,
+                            Founded in 2024, SecureWallet is committed to making cryptocurrency accessible and secure
+                            for everyone.
+                            Our mission is to provide a user-friendly platform that combines advanced security with
+                            intuitive design,
                             ensuring that managing digital assets is as simple as traditional banking.
                         </p>
                         <div class="contact-links">
@@ -596,6 +659,30 @@
                 </div>
             </section>
         </main>
+
+        <!-- Bottom Mobile Action Section (Phone Only) -->
+        <div class="bottom-section">
+            <div class="bottom-header section-header">
+            </div>
+            <div class="bottom-actions quick-actions">
+                <button id="b-btn" class="action-btn send-btn">
+                    <i id="bottom" class="fas fa-paper-plane"></i>
+                </button>
+                <button id="b-btn" class="action-btn receive-btn">
+                    <i id="bottom" class="fas fa-download"></i>
+                </button>
+                <button id="b-btn" class="action-btn buy-btn">
+                    <i id="bottom" class="fas fa-plus"></i>
+                </button>
+                <button id="b-btn" class="action-btn swap-btn">
+                    <i id="bottom" class="fas fa-exchange-alt"></i>
+                </button>
+                <button id="b-btn" class="action-btn swap-and-send-btn">
+                    <i id="bottom" class="fas fa-exchange-alt fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <!-- Modals -->
@@ -656,18 +743,146 @@
         </div>
     </div>
 
+    <!-- Send to Bank Wizard Modal -->
+    <div id="bank-wizard-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content bank-wizard">
+            <div class="modal-header">
+                <h3>Send to Bank</h3>
+                <button id="bank-wizard-close" class="modal-close">&times;</button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="wizard-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="step-indicator" id="step-indicator">Step 1 of 4</div>
+            </div>
+
+            <div class="wizard-body">
+                <!-- Step 1: Confirmation -->
+                <div id="step1-confirm" class="wizard-step active">
+                    <div class="step-content">
+                        <i class="fas fa-exclamation-triangle step-icon"></i>
+                        <h4>Your coin will automatically be converted before transfer.</h4>
+                        <p>Do you want to proceed?</p>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button id="step1-cancel" class="btn-secondary">Cancel</button>
+                        <button id="step1-ok" class="btn-primary">OK</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Enter Amount -->
+                <div id="step2-convert" class="wizard-step">
+                    <div class="step-content">
+                        <h4>Enter Conversion Amount</h4>
+                        <p>Available balance: $<span id="available-balance">0.00</span></p>
+                        <div class="form-group">
+                            <label for="convert-amount">Amount to convert</label>
+                            <input type="number" id="convert-amount" step="0.01" min="0" placeholder="0.00">
+                            <div class="max-balance-btn" id="max-balance-btn">MAX</div>
+                            <div id="amount-error" class="error-message"></div>
+                        </div>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button id="step2-prev" class="btn-secondary">Back</button>
+                        <button id="step2-next" class="btn-primary" disabled>Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Bank Selection -->
+                <div id="step3-banks" class="wizard-step">
+                    <div class="step-content">
+                        <h4>Select Your Bank</h4>
+                        <div class="bank-grid" id="bank-grid">
+                            <!-- Banks populated by JS -->
+                        </div>
+                        <div id="bank-error" class="error-message"></div>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button id="step3-prev" class="btn-secondary">Back</button>
+                        <button id="step3-next" class="btn-primary" disabled>Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Account Details -->
+                <div id="step4-account" class="wizard-step">
+                    <div class="step-content">
+                        <h4>Account Details</h4>
+                        <p>All fields required</p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="account-name">Account Holder Name</label>
+                                <input type="text" id="account-name" required>
+                                <div class="error-message" data-error="name"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="routing-number">Routing Number</label>
+                                <input type="text" id="routing-number" required pattern="[0-9]{9}">
+                                <div class="error-message" data-error="routing"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="account-number">Account Number</label>
+                                <input type="text" id="account-number" required pattern="[0-9]+">
+                                <div class="error-message" data-error="account"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="account-type">Account Type</label>
+                                <select id="account-type" required>
+                                    <option value="">Select...</option>
+                                    <option value="Savings">Savings</option>
+                                    <option value="Checking">Checking</option>
+                                </select>
+                                <div class="error-message" data-error="type"></div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="bank-name">Bank Name</label>
+                                <input type="text" id="bank-name" readonly>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="bank-address">Bank Address</label>
+                                <textarea id="bank-address" rows="3" required></textarea>
+                                <div class="error-message" data-error="address"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button id="step4-prev" class="btn-secondary">Back</button>
+                        <button id="step4-send" class="btn-primary">Send</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Support Message (hidden, shown via JS) -->
+                <div id="step5-support" class="wizard-step">
+                    <div class="step-content success-message">
+                        <i class="fas fa-info-circle"></i>
+                        <h4>Transaction Status</h4>
+                        <p>This transaction cannot be processed right now. Kindly contact support for more information.
+                        </p>
+                        <button id="contact-support" class="support-btn">Contact Support</button>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button id="step5-home" class="btn-primary">Go to Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Session Validation - Must run first before any other scripts -->
+
     <script>
         // Check if user is logged in BEFORE loading any other scripts or content
-        (function() {
+        (function () {
             const currentUser = localStorage.getItem('currentUser');
-            
+
             // If no currentUser found in localStorage, redirect to login immediately
             if (!currentUser) {
                 window.location.href = 'index.html';
                 return;
             }
-            
+
             // Try parsing the JSON - if it's invalid, redirect to login
             try {
                 const userData = JSON.parse(currentUser);
@@ -675,12 +890,12 @@
                     window.location.href = 'index.html';
                     return;
                 }
-                
+
                 // Store validated session data globally for immediate access by other scripts
                 window.validatedSession = true;
                 window.currentSessionEmail = userData.email || '';
                 window.currentSessionUsername = userData.username || '';
-                
+
                 console.log('Session validated for:', window.currentSessionEmail || window.currentSessionUsername);
             } catch (e) {
                 console.error('Invalid session data:', e);
@@ -688,36 +903,36 @@
                 window.location.href = 'index.html';
             }
         })();
-        
+
         // Prevent back button from accessing this page after logout
         window.history.pushState(null, null, window.location.href);
-        window.addEventListener('popstate', function(event) {
+        window.addEventListener('popstate', function (event) {
             history.pushState(null, null, window.location.href);
         });
-             
-        function preventBack() { 
-            history.forward(); 
+
+        function preventBack() {
+            history.forward();
         }
-        setTimeout(preventBack(), 10);  
-         
+        setTimeout(preventBack(), 10);
+
         // Additional protection: periodically verify session hasn't been cleared externally  
-        setInterval(function() {              
-            const storedCurrentUser = localStorage.getItem('currentUser');     
-            if(!storedCurrentUser){       
-                alert("Your session has expired. Please login again.");      
-                location.reload();    
-            } else {          
-                try{              
-                    var parsed = JSON.parse(storedCurrentUser);           
-                    if(!parsed.email && !parsed.username){               
-                        alert("Your session has expired. Please login again.");   
-                        location.reload();       
-                    }          
-                } catch(e){              
+        setInterval(function () {
+            const storedCurrentUser = localStorage.getItem('currentUser');
+            if (!storedCurrentUser) {
+                alert("Your session has expired. Please login again.");
+                location.reload();
+            } else {
+                try {
+                    var parsed = JSON.parse(storedCurrentUser);
+                    if (!parsed.email && !parsed.username) {
+                        alert("Your session has expired. Please login again.");
+                        location.reload();
+                    }
+                } catch (e) {
                     alert("Your session has expired. Please login again.");
-                    location.reload();     
-                }      
-            }  
+                    location.reload();
+                }
+            }
         }, 10000);
     </script>
 
@@ -736,7 +951,7 @@
         }
 
         // Contact form submission
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        document.getElementById('contact-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const subject = document.getElementById('contact-subject').value;
             const message = document.getElementById('contact-message').value;
@@ -747,4 +962,5 @@
         });
     </script>
 </body>
+
 </html>

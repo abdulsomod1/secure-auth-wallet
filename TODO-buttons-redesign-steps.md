@@ -13,7 +13,7 @@ Current: Step 3 complete. Testing next.
 
 
 - [ ] Step 2: Edit user.html - Add new .action-section after .balance-card with moved buttons  
-- [ ] Step 3: Edit user.css - Add .action-section styles (white/grey theme, responsive)
+- [ ] Step 3: Edit user.css - Add .action-section styles (white/black theme, responsive)
 - [ ] Step 4: Test responsiveness (PC/tablet/phone)
 - [ ] Step 5: Verify button functionality (modals/DApps work)
 - [ ] Step 6: Update TODO progress
