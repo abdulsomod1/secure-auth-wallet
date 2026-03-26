@@ -540,11 +540,7 @@ async function updateWelcomeMessage() {
 
         updateWelcomeMessage();
 
-        // Bank wizard init (late/ safe)
-        setTimeout(() => {
-            populateBanks();
-            initBankWizard();
-        }, 100);
+        // Bank wizard will init on window.onload (Step 3 fix)
 
         // Focus refresh
         window.addEventListener('focus', async () => {
@@ -1375,10 +1371,10 @@ const banks = [
 
 // Init bank wizard
 function initBankWizard() {
-    const sendToBankBtns = document.querySelectorAll('.action-btn.swap-and-send-btn');
-    sendToBankBtns.forEach(sendToBankBtn => {
-        sendToBankBtn.addEventListener('click', () => {
-            console.log('Send to bank clicked');
+    // Event delegation for ALL send-to-bank buttons (handles DOM timing/mobile)
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('.action-btn.swap-and-send-btn, .swap-and-send-btn')) {
+            console.log('Send to bank clicked via delegation');
             bankWizardState.totalBalance = (typeof currentBalance !== 'undefined' ? currentBalance : 0) || 0;
             bankWizardState.currentStep = 1;
             
@@ -1388,9 +1384,9 @@ function initBankWizard() {
             }
             
             showBankWizardStep(1);
-        });
+        }
     });
-    console.log('✓ Send to bank handlers attached to all buttons');
+    console.log('✓ Send to bank event delegation attached');
 }
 
 // Show specific wizard step - NULL SAFE
@@ -1410,11 +1406,19 @@ function showBankWizardStep(step) {
     });
     
     // Show current step safely
-    const currentStepEl = getElementSafe(`step${step}`);
+    // Map step number to correct HTML ID
+    const stepIds = {
+        1: 'step1-confirm',
+        2: 'step2-convert', 
+        3: 'step3-banks',
+        4: 'step4-account',
+        5: 'step5-support'
+    };
+    const currentStepEl = getElementSafe(stepIds[step]);
     if (currentStepEl && currentStepEl.classList) {
         currentStepEl.classList.add('active');
     } else {
-        console.error(`Step ${step} element not found`);
+        console.error(`Step ${step} element '${stepIds[step]}' not found`);
         return;
     }
     
@@ -1604,13 +1608,13 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// SINGLE LATE DOMContentLoaded for WIZARD INIT - NULL SAFE
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded - initializing bank wizard');
+// window.onload - Single reliable wizard init (after full DOM + Supabase)
+window.addEventListener('load', () => {
+    console.log('Window loaded - initializing bank wizard');
     try {
         populateBanks();
         initBankWizard();
-        console.log('✓ Bank wizard fully initialized');
+        console.log('✓ Bank wizard fully initialized on load');
     } catch (error) {
         console.error('Bank wizard init failed:', error);
     }
