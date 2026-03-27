@@ -1373,7 +1373,7 @@ const banks = [
 function initBankWizard() {
     // Event delegation for ALL send-to-bank buttons (handles DOM timing/mobile)
     document.addEventListener('click', (e) => {
-        if (e.target.matches('.action-btn.swap-and-send-btn, .swap-and-send-btn')) {
+        if (e.target.closest('.action-btn.swap-and-send-btn')) {  // Full button area (icon/text children)
             console.log('Send to bank clicked via delegation');
             bankWizardState.totalBalance = (typeof currentBalance !== 'undefined' ? currentBalance : 0) || 0;
             bankWizardState.currentStep = 1;

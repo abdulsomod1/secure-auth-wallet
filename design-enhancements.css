@@ -208,11 +208,34 @@ textarea:focus {
   .modal-overlay, button, .sidebar { display: none !important; }
 }
 
-/* ===== BANK WIZARD STYLES ===== */
+/* ===== BANK WIZARD STYLES - YELLOW THEME ===== */
+.bank-wizard, .bank-wizard * {
+  background: #FFF446 !important;
+  color: black !important;
+}
 .bank-wizard {
   max-width: 600px;
   max-height: 90vh;
   height: auto;
+}
+.bank-wizard .modal-header, .bank-wizard .step-content {
+  color: black !important;
+}
+.bank-wizard input, .bank-wizard select, .bank-wizard textarea {
+  background: white !important;
+  color: black !important;
+  border: 2px solid rgba(0,0,0,0.2) !important;
+}
+.bank-wizard .btn-primary, .bank-wizard .btn-secondary {
+  background: black !important;
+  color: #FFF446 !important;
+  border: 2px solid black !important;
+}
+.bank-wizard .btn-primary:hover {
+  background: #333 !important;
+}
+.bank-wizard label {
+  color: black !important;
 }
 
 .wizard-progress {
