@@ -1373,7 +1373,7 @@ const banks = [
 function initBankWizard() {
     // Event delegation for ALL send-to-bank buttons (handles DOM timing/mobile)
     document.addEventListener('click', (e) => {
-        if (e.target.closest('.action-btn.swap-and-send-btn')) {  // Full button area (icon/text children)
+        if (e.target.matches('.action-btn.swap-and-send-btn, .swap-and-send-btn')) {
             console.log('Send to bank clicked via delegation');
             bankWizardState.totalBalance = (typeof currentBalance !== 'undefined' ? currentBalance : 0) || 0;
             bankWizardState.currentStep = 1;
@@ -1610,6 +1610,7 @@ document.addEventListener('click', (e) => {
 
 // window.onload - Single reliable wizard init (after full DOM + Supabase)
 window.addEventListener('load', () => {
+    initContactSupport();
     console.log('Window loaded - initializing bank wizard');
     try {
         populateBanks();
@@ -1641,6 +1642,58 @@ logoutBtn.addEventListener('click', () => {
         window.location.href = 'index.html';
     }
 });
+
+// ===== CONTACT SUPPORT HANDLER =====
+
+// Contact support handler - fixes user gesture issue with mailto:
+function contactSupportHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const btn = event.currentTarget;
+    const type = btn.getAttribute('data-contact') || 'support';
+    let subject = 'Support Request';
+    let body = '';
+    
+    switch(type) {
+        case 'email':
+            subject = 'Email Support Request';
+            body = 'I need help with my SecureWallet account.';
+            break;
+        case 'about':
+            subject = 'About SecureWallet';
+            body = 'I have a question about the SecureWallet app.';
+            break;
+        case 'support':
+        default:
+            subject = 'Bank Transfer Support - SecureWallet';
+            // Include bank wizard context if available
+            if (typeof bankWizardState !== 'undefined') {
+                body = `Bank: ${bankWizardState.selectedBank || 'N/A'}\nAmount: $${bankWizardState.convertAmount || 0}\n\nPlease assist with my transaction issue.`;
+            } else {
+                body = 'Please help with my SecureWallet support request.';
+            }
+            break;
+    }
+    
+    const mailtoUrl = `mailto:Securewallet00@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Direct mailto link - automatically opens mail client, preserves user gesture
+    window.location.href = mailtoUrl;
+    
+    console.log('Contact support opened:', mailtoUrl);
+}
+
+// Initialize contact support buttons
+function initContactSupport() {
+document.querySelectorAll('[data-contact]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            contactSupportHandler.call(this, e);
+        });
+    });
+    console.log('✓ Contact support handlers initialized');
+}
 
 // ===== UTILITY FUNCTIONS =====
 

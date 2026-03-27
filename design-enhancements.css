@@ -500,12 +500,16 @@ textarea:focus {
 
 .support-btn {
   background: linear-gradient(135deg, var(--premium-warning), #f59e0b);
-  color: white !important;
+  color: black !important;
   padding: 14px 28px;
   border-radius: 25px;
   font-weight: 600;
   box-shadow: var(--premium-shadow-md);
   transition: all 0.3s ease;
+}
+
+#contact-support {
+  color: black !important;
 }
 
 .support-btn:hover {
