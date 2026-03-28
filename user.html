@@ -7,6 +7,26 @@
     <title>SecureWallet - Dashboard</title>
     <link rel="stylesheet" href="user.css">
     <link rel="stylesheet" href="design-enhancements.css">
+    <style>
+        .eye-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .eye-icon:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -65,12 +85,11 @@
             <!-- Home/Wallet Section -->
             <section id="home-section" class="section active">
                 <div class="section-header">
-                    <h1>Dashboard</h1>
                     <div class="user-info">
                         <div class="user-avatar">
                             <!-- Profile picture will be displayed here -->
                         </div>
-                        <span id="welcome-message" style="font-weight: bold;"></span>
+                        <span id="welcome-message"></span>
                     </div>
                 </div>
 

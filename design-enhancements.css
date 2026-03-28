@@ -108,7 +108,7 @@ textarea:focus {
 
 .input-group input:focus + label i,
 .input-group label i {
-  color: var(--premium-primary) !important;
+  color: black;
   transform: scale(1.1);
 }
 
@@ -253,7 +253,7 @@ textarea:focus {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--premium-primary), #00f2fe);
+  background: linear-gradient(90deg, var(--premium-primary), #FFF446);
   border-radius: 4px;
   transition: width 0.4s ease;
   width: 25%;
@@ -422,7 +422,7 @@ textarea:focus {
 
 .bank-option input:checked + label {
   border-color: var(--premium-primary);
-  background: linear-gradient(135deg, var(--premium-primary), #00f2fe);
+  background: linear-gradient(135deg, var(--premium-primary), #FFF446);
   color: white;
   box-shadow: var(--premium-glow-primary), var(--premium-shadow-md);
   transform: translateY(-2px);
@@ -460,7 +460,7 @@ textarea:focus {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--premium-primary), #00f2fe);
+  background: linear-gradient(135deg, var(--premium-primary), #FFF446);
   color: white;
   box-shadow: var(--premium-shadow-md);
 }

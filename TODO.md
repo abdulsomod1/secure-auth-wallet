@@ -1,12 +1,10 @@
-# Buy Button Integration Plan (MoonPay)
-Current Status: Approved ✅
+# Remove Section Header Transparent Background (Mobile Only)
 
-## Steps to Complete:
-- [x] 1. Create TODO.md with plan tracking ✅
-- [x] 2. Read user.js to confirm exact content for edit ✅
-- [x] 3. Edit user.js - Replace Kraken URL with MoonPay ✅
-- [x] 4. Test buy button functionality ✅
-- [x] 5. Attempt completion ✅
-
-**Status:** COMPLETE 🎉
+## Steps:
+- [x] 1. Create this TODO.md 
+- [x] 2. Edit user.css - Add mobile overrides for DApp, NFT Gallery, Settings, Customer Service, About headers
+- [x] 3. Remove conflicting specific transparent rules in mobile media queries
+-
+- [ ] 5. Test phone size (<=480px)
+- [ ] 6. Confirm headers solid/opaque, update TODO, attempt completion
 
