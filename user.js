@@ -1670,7 +1670,7 @@ function contactSupportHandler(event) {
             break;
     }
     
-    const mailtoUrl = `mailto:besevaultwallet@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoUrl = `mailto:support.basevault@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
     // Direct mailto link - automatically opens mail client, preserves user gesture
     window.location.href = mailtoUrl;
